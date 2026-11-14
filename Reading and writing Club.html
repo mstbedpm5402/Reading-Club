@@ -1,0 +1,1102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>SLLC Online Course — Imagine1Day</title>
+<meta name="description" content="School-Based Literacy and Language Club implementation course for Ethiopian primary schools (Grades 1–8).">
+<meta name="theme-color" content="#0d6b50" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1612" media="(prefers-color-scheme: dark)">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap">
+<script>
+/* Apply the saved theme before paint so dark-mode users see no white flash. */
+try {
+  var t = localStorage.getItem('sllc-theme');
+  if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+} catch (e) {}
+</script>
+<style>
+:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#f5f7f4; --surface:#ffffff; --surface2:#eaf0ec; --ink:#14201b; --muted:#53635b; --line:#d3ddd6;
+  --accent:#0d6b50; --accent-ink:#ffffff; --sun:#f0b323; --sun-ink:#3a2a00; --good:#13795b; --bad:#b3261e; --good-bg:#e1f3ec; --bad-bg:#fbe6e4;
+  --head:"Bricolage Grotesque","Atkinson Hyperlegible",system-ui,sans-serif; --body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0e1612; --surface:#16211b; --surface2:#1e2c25; --ink:#e8f0eb; --muted:#9db0a5; --line:#2c3d34;
+  --accent:#3fbf93; --accent-ink:#06231a; --sun:#f0b323; --sun-ink:#3a2a00; --good:#4fd1a1; --bad:#ff8a80; --good-bg:#12372b; --bad-bg:#40201d; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e1612; --surface:#16211b; --surface2:#1e2c25; --ink:#e8f0eb; --muted:#9db0a5; --line:#2c3d34;
+  --accent:#3fbf93; --accent-ink:#06231a; --sun:#f0b323; --sun-ink:#3a2a00; --good:#4fd1a1; --bad:#ff8a80; --good-bg:#12372b; --bad-bg:#40201d; color-scheme:dark}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 64px)}
+*,*::before,*::after{box-sizing:border-box}
+img{max-width:100%}
+[hidden]:not([hidden=until-found i]){display:none!important}
+body{background:var(--bg);color:var(--ink);font:16px/1.6 var(--body);margin:0;padding-block:0 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--surface);z-index:30}
+h1,h2,h3{font-family:var(--head);line-height:1.15;text-wrap:balance;margin:0}
+h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:800;letter-spacing:-.02em}
+h2{font-size:1.6rem;font-weight:800;letter-spacing:-.01em}
+h3{font-size:1.15rem;font-weight:600}
+p{margin:0}
+a{color:var(--accent)}
+[tabindex="-1"]:focus{outline:none}
+.skip{position:absolute;left:-999px;top:env(safe-area-inset-top,0px);z-index:100;background:var(--accent);color:var(--accent-ink);padding:10px 16px;text-decoration:none;font-weight:700;border-radius:0 0 10px 0}
+.skip:focus{left:0}
+.wrap{max-width:1100px;margin:0 auto}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line);margin-inline:calc(-1*max(16px,env(safe-area-inset-left,0px)));padding-inline:max(16px,env(safe-area-inset-left,0px))}
+.bar{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:10px 0}
+.brand{font-family:var(--head);font-weight:800;font-size:1.1rem;margin-right:auto;display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
+.mark{width:30px;height:30px;border-radius:8px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-size:.95rem}
+nav{display:flex;gap:4px;flex-wrap:wrap}
+nav a{padding:8px 12px;border-radius:8px;text-decoration:none;color:var(--muted);font-weight:700;font-size:.95rem}
+nav a[aria-current="page"]{background:var(--surface2);color:var(--ink)}
+nav a:hover{color:var(--ink)}
+:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+button,.btn{font:inherit;font-weight:700;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:10px 16px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px;min-height:44px}
+button:hover,.btn:hover{border-color:var(--accent)}
+.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.primary:hover{filter:brightness(1.08)}
+.sun{background:var(--sun);color:var(--sun-ink);border-color:var(--sun)}
+button[disabled]{opacity:.5;cursor:not-allowed}
+.theme-btn{min-height:40px;min-width:40px;padding:0 8px;font-size:1.15rem;line-height:1;border-radius:10px}
+input[type=text],input[type=email],input[type=password],input[type=url]{font:inherit;width:100%;padding:11px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);min-height:44px}
+label{display:block;font-weight:700;margin-bottom:4px;font-size:.95rem}
+.field{display:grid;gap:2px;margin-bottom:14px}
+.hint{color:var(--muted);font-size:.9rem}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.stack{display:grid;gap:16px}
+.pill{display:inline-block;font-size:.8rem;font-weight:700;padding:2px 10px;border-radius:99px;background:var(--surface2);color:var(--muted);letter-spacing:.02em}
+.pill.ok{background:var(--good-bg);color:var(--good)}
+.msg{padding:12px 14px;border-radius:10px;font-weight:700}
+.msg.bad{background:var(--bad-bg);color:var(--bad)} .msg.good{background:var(--good-bg);color:var(--good)} .msg.info{background:var(--surface2);color:var(--ink);font-weight:400}
+.hero{padding:44px 0 28px;display:grid;gap:16px;max-width:760px}
+.hero p.lead{font-size:1.15rem;color:var(--muted)}
+.steps{counter-reset:s;display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:8px 0 28px;padding:0;list-style:none}
+.steps li{counter-increment:s;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.steps li::before{content:counter(s);display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--sun);color:var(--sun-ink);font-weight:800;margin-bottom:8px}
+.steps b{display:block;font-family:var(--head)}
+.copybox{background:var(--bg);border:1px dashed var(--line);border-radius:10px;padding:12px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85rem;white-space:pre-wrap;word-break:break-word;user-select:all}
+.copyrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.course{display:grid;grid-template-columns:290px minmax(0,1fr);gap:24px;padding-top:24px;align-items:start}
+.rail{position:sticky;top:calc(env(safe-area-inset-top,0px) + 70px);display:grid;gap:4px;max-height:calc(100vh - 100px);overflow:auto}
+.rail button{justify-content:flex-start;text-align:left;border:1px solid transparent;background:none;font-weight:400;padding:9px 10px;border-radius:10px;width:100%;line-height:1.3}
+.rail button[aria-current="true"]{background:var(--surface2);border-color:var(--line);font-weight:700}
+.rail .n{flex:0 0 26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:.8rem;font-weight:700;background:var(--surface2);color:var(--muted)}
+.rail .done .n{background:var(--good);color:var(--accent-ink)}
+.menu{display:none}
+.progress{height:8px;border-radius:99px;background:var(--surface2);overflow:hidden}
+.progress i{display:block;height:100%;background:var(--accent)}
+.lesson{display:grid;gap:22px;min-width:0}
+.lesson section{display:grid;gap:10px}
+.lesson ul{margin:0;padding-left:1.2rem;display:grid;gap:6px}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:.95rem}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--surface2);font-family:var(--head)}
+tr:last-child td{border-bottom:0}
+.q{border:1px solid var(--line);border-radius:12px;padding:16px;display:grid;gap:10px;background:var(--surface);min-width:0}
+.q legend{font-weight:700;padding:0 4px}
+fieldset{border:0;margin:0;padding:0;min-width:0}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid var(--line);border-radius:10px;cursor:pointer;font-weight:400;margin:0}
+.opt input{margin-top:5px;accent-color:var(--accent)}
+.opt.right{border-color:var(--good);background:var(--good-bg)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.why{font-size:.92rem;color:var(--muted)}
+.cert{background:#fffdf5;color:#1d2b24;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.cert svg{display:block;width:100%;height:auto}
+.stat{display:flex;gap:28px;flex-wrap:wrap}
+.stat div b{display:block;font-family:var(--head);font-size:1.8rem}
+.res{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;padding:0;margin:0;list-style:none}
+.res a{display:grid;gap:4px;height:100%;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);text-decoration:none;color:var(--ink)}
+.res a:hover{border-color:var(--accent)}
+.res b{font-family:var(--head);font-weight:600;line-height:1.25}
+.res span.d{color:var(--muted);font-size:.9rem}
+.k{justify-self:start;font-size:.75rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:6px;background:var(--surface2);color:var(--muted)}
+.k.video{background:var(--bad-bg);color:var(--bad)} .k.audio{background:var(--sun);color:var(--sun-ink)} .k.tool{background:var(--good-bg);color:var(--good)}
+footer{max-width:1100px;margin:40px auto 0;color:var(--muted);font-size:.88rem}
+@media (max-width:860px){
+  .course{grid-template-columns:1fr}.rail{display:none}.menu{display:block}
+  .grid2,.steps{grid-template-columns:1fr}
+  .menu summary{cursor:pointer;font-weight:700;padding:12px 14px;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+  .menu .rail{display:grid;position:static;max-height:none;margin-top:8px}
+}
+textarea,select{font:inherit;width:100%;padding:11px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+textarea{min-height:120px;resize:vertical}
+select{min-height:44px}
+.vis{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:grid;gap:10px}
+.vis+.vis{margin-top:-8px}
+.vis .cap{font-family:var(--head);font-weight:600}
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;list-style:none;padding:0;margin:0}
+.flow li{background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:.92rem;line-height:1.35}
+.flow li b{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--accent);color:var(--accent-ink);font-size:.82rem;margin-bottom:6px}
+.hub{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
+.hub .c{grid-column:1/-1;text-align:center;background:var(--accent);color:var(--accent-ink);border-radius:12px;padding:12px;font-family:var(--head);font-weight:800}
+.hub .i{background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;text-align:center;font-size:.92rem}
+.tl{display:flex;border-radius:10px;overflow:hidden;border:1px solid var(--line);min-height:48px}
+.tl div{display:grid;place-items:center;padding:6px 2px;font-size:.82rem;font-weight:700;color:var(--accent-ink);min-width:0;overflow:hidden}
+.tl div:nth-child(odd){background:var(--accent)}
+.tl div:nth-child(even){background:color-mix(in srgb,var(--accent) 65%,var(--ink) 35%)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;list-style:none;margin:0;padding:0;font-size:.88rem;color:var(--muted)}
+.legend li::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;background:var(--accent)}
+.legend li:nth-child(even)::before{background:color-mix(in srgb,var(--accent) 65%,var(--ink) 35%)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.cols>div{border:1px solid var(--line);border-radius:12px;background:var(--surface2);padding:12px}
+.cols h4{margin:0 0 6px;font-family:var(--head)}
+.cols ul{margin:0;padding-left:1.1rem;font-size:.92rem;display:grid;gap:3px}
+.res.vid a{border-left:4px solid var(--bad)}
+.k.video::before{content:"\25B6\00a0"}
+.prac{border:2px solid var(--sun);border-radius:14px;padding:20px;background:var(--surface);display:grid;gap:12px}
+.pill.sunp{background:var(--sun);color:var(--sun-ink)}
+.chk{display:flex;gap:10px;align-items:flex-start;padding:9px 12px;border:1px solid var(--line);border-radius:10px;cursor:pointer;font-weight:400;margin:0}
+.chk input{margin-top:3px;accent-color:var(--accent);width:18px;height:18px;flex:0 0 auto}
+.listen[aria-pressed="true"]{background:var(--sun);color:var(--sun-ink);border-color:var(--sun)}
+.pdot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--sun);margin-left:auto;flex:0 0 auto}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#app">Skip to main content</a>
+<header class="top"><div class="bar">
+  <a class="brand" href="#home"><span class="mark" aria-hidden="true">Aa</span>SLLC Online Course</a>
+  <nav id="nav" aria-label="Main"></nav>
+  <button type="button" id="theme-toggle" class="theme-btn" aria-label="Toggle colour theme" title="Toggle colour theme">☾</button>
+</div></header>
+<main class="wrap" id="app" tabindex="-1"></main>
+<footer id="foot"></footer>
+
+<script>
+/* ============================================================
+   SETTINGS — the course owner edits this block only
+   ============================================================ */
+const CFG = {
+  org: "Imagine1Day International Organizations",
+  course: "School-Based Literacy and Language Club (SLLC)",
+  sub: "Reading & Writing Club implementation course for Ethiopian primary schools (Grades 1–8)",
+  ownerEmail: "mohammedscho2023@gmail.com",
+  social: { name: "our course community group", url: "" },   // join link for Telegram/Facebook, or leave ""
+
+  passModule: 3,          // correct answers (of 4) needed to complete a module
+  examSize: 30, passPct: 70,
+  practiceMin: 10,        // practice tasks (of 14) needed for the certificate
+  practiceMinChars: 40,   // minimum length of a written practice answer
+
+  salt: "imagine1day-sllc-2026-x7Qm",
+
+  /* Approval. A GitHub Pages file is public, so an access code alone can be
+     forged by anyone who reads this file. The real gate is this allowlist.
+     Add one line per approved learner, generated on the Admin page.
+     Set requireAllowlist to false ONLY if you accept trust-based approval. */
+  requireAllowlist: true,
+  approved: [
+    // "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+  ],
+
+  pageUrl: "",            // leave empty: the site works out its own address
+  instructorHash: "3b7af1bb3e422b7d1c9fd21c9d5e10d8a21d1bdc30f9f4fc92d2902a6a773c3c"
+};
+
+/* ============================================================
+   SHA-256 (TextEncoder-based, correct UTF-8)
+   ============================================================ */
+function sha256(s){
+  const K=[0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
+  const b = Array.from(new TextEncoder().encode(s));
+  const l = b.length * 8;
+  b.push(0x80);
+  while (b.length % 64 !== 56) b.push(0);
+  for (let i = 7; i >= 0; i--) b.push(i > 3 ? 0 : (l >>> (i * 8)) & 255);
+  let h = [0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];
+  const R = (x, n) => (x >>> n) | (x << (32 - n));
+  for (let o = 0; o < b.length; o += 64) {
+    const w = new Array(64);
+    for (let i = 0; i < 16; i++) w[i] = (b[o + 4*i] << 24) | (b[o + 4*i + 1] << 16) | (b[o + 4*i + 2] << 8) | b[o + 4*i + 3];
+    for (let i = 16; i < 64; i++) {
+      const s0 = R(w[i-15],7) ^ R(w[i-15],18) ^ (w[i-15] >>> 3);
+      const s1 = R(w[i-2],17) ^ R(w[i-2],19) ^ (w[i-2] >>> 10);
+      w[i] = (w[i-16] + s0 + w[i-7] + s1) | 0;
+    }
+    let [a,c,d,e,f,g,hh,j] = h;
+    for (let i = 0; i < 64; i++) {
+      const S1 = R(f,6) ^ R(f,11) ^ R(f,25), ch = (f & g) ^ (~f & hh), t1 = (j + S1 + ch + K[i] + w[i]) | 0;
+      const S0 = R(a,2) ^ R(a,13) ^ R(a,22), mj = (a & c) ^ (a & d) ^ (c & d), t2 = (S0 + mj) | 0;
+      j = hh; hh = g; g = f; f = (e + t1) | 0; e = d; d = c; c = a; a = (t1 + t2) | 0;
+    }
+    h = [h[0]+a,h[1]+c,h[2]+d,h[3]+e,h[4]+f,h[5]+g,h[6]+hh,h[7]+j].map(x => x | 0);
+  }
+  return h.map(x => (x >>> 0).toString(16).padStart(8,'0')).join('');
+}
+
+/* ============================================================
+   COURSE CONTENT
+   ============================================================ */
+const MODULES = [
+{ id:1, title:"Understanding School-Based Literacy Improvement", mins:35,
+  intro:"School-based literacy improvement is a planned, continuous effort led by the school itself (directors, teachers, volunteers, parents and students) so that all children learn to read and write well, especially in the early grades and in their mother tongue.",
+  sections:[
+   {h:"The core idea", l:["The school identifies its own literacy challenges, for example many Grade 2 students cannot read simple words.","It sets clear goals, for example 80% of Grade 2 students reading at least 40 words correct per minute by June.","It plans and carries out actions: TaRL, better teaching, extra practice time, reading clubs, reading corners, volunteer support and parent engagement.","It checks progress regularly and adjusts the plan using evidence such as simple assessments, observation and student work."]},
+   {h:"Seven key components", l:["Strong classroom instruction in reading and writing","Extra practice time through clubs and activities","Access to supplementary reading materials","Support for struggling learners","Inclusion, gender equity and language considerations","Parent and community engagement","Monitoring, review and continuous improvement"]},
+   {h:"Five types of school-based literacy activity", table:{head:["Type","Examples"],rows:[["Classroom reading and writing lessons","Letter/Fidel sounds, blending, guided reading, TaRL classrooms"],["Co-curricular literacy clubs","Reading and Writing Club, 1–2 times a week, about 90 minutes"],["Reading corners and spaces","Classroom shelves, reading room, community book banks"],["Volunteer, peer and family support","Reading buddies, parents listening to children read"],["School-wide events","Fluency competitions, storytelling contests, literacy weeks"]]}},
+   {h:"The five key reading skills", table:{head:["Skill","What it means","Example"],rows:[["Phonemic awareness","Hearing and manipulating individual sounds in spoken words (oral, no letters)","Segmenting fish into /f/ /i/ /sh/"],["Phonics","Linking letters (graphemes) to sounds (phonemes)","Letters sh make one sound in ship"],["Fluency","Reading accurately, smoothly and with expression","Choral, paired and repeated reading"],["Vocabulary","Words a learner knows and uses","Teaching harvest with a sentence and discussion"],["Comprehension","Understanding, interpreting and thinking about text","Why did Sara carry an umbrella?"]]}},
+   {h:"Eight principles of effective literacy development", l:["Start with the mother tongue","Teach the five key reading skills explicitly","Integrate reading, writing, speaking and listening","Provide lots of practice with appropriate texts: decodable, levelled, culturally relevant, narrative and informational","Differentiate support for struggling learners","Ensure inclusion and gender equity","Create a print-rich, supportive environment","Monitor progress and use data to improve"]}
+  ],
+  quiz:[
+   {q:"What makes literacy improvement “school-based”?",o:["Decisions come only from the regional education bureau","Decisions are made at school level, led by teachers and school leaders with support from supervisors, PTSA and communities","Only textbooks supplied by the woreda are used","Only volunteers from outside the school lead it"],a:1,why:"The approach is school-based because decisions are made at school level and rooted in the school's daily reality."},
+   {q:"Which skill is an oral language skill that does not involve printed letters?",o:["Phonics","Fluency","Phonemic awareness","Writing"],a:2,why:"Phonemic awareness is hearing, identifying and manipulating sounds in spoken words."},
+   {q:"Why should instruction begin in the mother tongue?",o:["Children learn to read and write best in a language they understand, and this supports later learning of other languages","It is cheaper for schools","English should never be taught","It removes the need for assessment"],a:0,why:"Strong mother-tongue literacy supports later learning of additional languages such as English."},
+   {q:"Texts for practice should be…",o:["Only very long and difficult","Decodable, levelled, interesting and culturally relevant","Only informational","Only chosen by volunteers without checking level"],a:1,why:"Texts should match sounds taught, match reading ability, interest children and include both narrative and informational types."}
+  ]},
+{ id:2, title:"The School-Based Literacy and Language Club (SLLC)", mins:30,
+  intro:"The SLLC is a student-centred extracurricular platform within a school that improves literacy, language, communication and reading skills through organised and enjoyable activities beyond regular lessons.",
+  sections:[
+   {h:"Purpose", l:["Improve reading, writing, speaking and listening","Build a culture of reading and lifelong learning","Strengthen the language of instruction and other languages taught","Develop communication, collaboration, leadership and critical thinking","Support struggling readers and writers with inclusive participation","Offer storytelling, debates, public speaking, reading circles, drama, poetry and creative writing"]},
+   {h:"Why one integrated club?", l:["Literacy skills are interconnected: reading, writing, speaking and listening reinforce each other.","Efficient use of limited resources, facilitators and meeting time.","Inclusive participation: varied activities appeal to different strengths.","Stronger learning, communication, reading culture, academic achievement and leadership skills.","Less duplication and administrative workload, and a sustainable framework."]},
+   {h:"General objective", p:"To enhance students' literacy and language competencies through participatory, enjoyable and inclusive activities that promote reading, writing, speaking, listening and critical thinking."},
+   {h:"Eleven guiding principles", l:["Learner-centred participation","Inclusiveness and equity","Voluntary and enjoyable learning","Holistic literacy development","Respect for diversity","Collaboration and teamwork","Creativity and innovation","Leadership and responsibility","Continuous learning and improvement","Community and stakeholder engagement","Child protection and a safe learning environment"]}
+  ],
+  quiz:[
+   {q:"What is the main advantage of one integrated literacy club over separate clubs?",o:["It needs no facilitators","It combines reading, writing, speaking and listening under one coordinated platform, saving resources and reducing duplication","It only serves the best readers","It replaces classroom lessons"],a:1,why:"Integration recognises that literacy skills are interconnected and maximises limited resources."},
+   {q:"Which principle says participation should be based on students' interest?",o:["Voluntary and enjoyable learning","Continuous improvement","Holistic development","Community engagement"],a:0,why:"Participation should come from interest and enthusiasm, with interactive, enjoyable activities."},
+   {q:"Who are the primary actors in planning, implementing and evaluating club activities?",o:["Only teachers","Only the school director","Students","Only parents"],a:2,why:"Learner-centred participation makes students the primary actors."},
+   {q:"The SLLC should give equal opportunities regardless of…",o:["Only gender","Gender, language background, disability, socioeconomic status or academic performance","Only academic performance","Nothing; places are limited to top learners"],a:1,why:"Inclusiveness and equity cover all these dimensions, with special attention to marginalised and struggling learners."}
+  ]},
+{ id:3, title:"Club Leadership and Management", mins:35,
+  intro:"A clear committee structure, defined roles, annual and weekly plans and regular review meetings keep the club accountable and running smoothly.",
+  sections:[
+   {h:"Committee roles", table:{head:["Position","Key responsibilities"],rows:[["Chairperson / President","Overall leadership, chairs meetings, represents the club, ensures plans are implemented"],["Vice Chairperson","Supports the Chairperson, acts when the Chairperson is absent, monitors progress"],["Secretary","Agendas, minutes, records, correspondence and membership register"],["Treasurer","Financial records, budgets and reports, transparency"],["Program / Activity Coordinator","Activity schedules, event plans, monitors and reports outcomes"],["Membership Coordinator","Recruits and orients members, keeps records, promotes retention"],["Communications Officer","Shares information, publicises activities and achievements"]]}},
+   {h:"Best practices for committees", l:["Define terms of office and election procedures","Hold regular committee meetings and document decisions and actions","Ensure transparency in financial and operational matters","Promote gender balance, inclusion and active member participation"]},
+   {h:"Annual planning steps", l:["Review the previous year's performance","Identify priorities, opportunities and challenges","Set annual goals and objectives","Develop activities and timelines","Assign responsibilities","Prepare a budget and resource plan","Obtain committee approval","Communicate the plan to members"]},
+   {h:"Weekly timetable and review meetings", l:["Weekly timetable: identify the week's activities, allocate dates, times and venues, assign people, confirm resources, share with members.","Review meetings come in four types: weekly, monthly, quarterly and annual review and planning.","Standard agenda: welcome, previous minutes and actions, progress updates, challenges, financial update, decisions and actions, planning ahead, closing.","Outputs: minutes, updated action plan, progress reports, recommendations and agreed next steps."]}
+  ],
+  quiz:[
+   {q:"Who records and distributes meeting minutes and keeps the membership register?",o:["Treasurer","Secretary","Communications Officer","Vice Chairperson"],a:1,why:"The Secretary prepares agendas, records minutes and maintains records and the membership register."},
+   {q:"Which is the FIRST step in annual planning?",o:["Prepare the budget","Review the previous year's performance","Assign responsibilities","Obtain committee approval"],a:1,why:"Planning begins by reviewing last year's performance."},
+   {q:"Which is NOT one of the four types of review meeting?",o:["Weekly","Monthly","Quarterly","Daily"],a:3,why:"The manual lists weekly, monthly, quarterly and annual review meetings."},
+   {q:"Who manages budgets and financial reports?",o:["Treasurer","Membership Coordinator","Program Coordinator","Chairperson only"],a:0,why:"The Treasurer maintains financial records and prepares budgets and reports."}
+  ]},
+{ id:4, title:"Student Participation and Inclusion", mins:35,
+  intro:"All learners should have equal opportunities to benefit. Clubs identify and support vulnerable students, promote gender equity, include children with disabilities and create safe, accessible spaces.",
+  sections:[
+   {h:"Students who may need additional support", l:["Students with disabilities or learning difficulties","Girls facing social or cultural barriers","Children from economically disadvantaged households","Orphans and vulnerable children","Students with frequent absenteeism","Students with emotional or psychosocial challenges or language and communication difficulties"]},
+   {h:"Identifying and supporting", l:["Identify through classroom observation, attendance monitoring, talks with students and parents, teacher referrals, peer feedback and community assessments.","Support through mentoring, tutoring, referral to specialised services, learning materials, psychosocial activities and regular follow-up.","Maintain confidentiality and dignity, avoid labelling or stigma, and involve parents and caregivers."]},
+   {h:"Gender equity", l:["Encourage girls and boys to participate equally and balance club committees.","Use inclusive language, remove participation barriers and give leadership opportunities to all.","Indicators: balanced membership, equal participation, fair leadership distribution, reduced absenteeism and dropout."]},
+   {h:"Disability inclusion and safe environments", l:["Adapt activities, use accessible communication, arrange seating and spaces, encourage peer support and give extra time when needed.","Focus on abilities rather than limitations and consult students and caregivers.","Safe environment: respectful relationships, clear rules, protection from bullying and discrimination.","Accessible environment: safe physical access, adequate lighting and seating, clear instructions and flexible participation."]},
+   {h:"Safety and accessibility checklist", table:{head:["Area","Checklist item"],rows:[["Physical environment","Learning space is clean and safe"],["Accessibility","Students can enter and move around comfortably"],["Participation","All students have opportunities to contribute"],["Communication","Information is clear and understandable"],["Protection","Procedures exist for reporting concerns"],["Inclusion","Activities are adapted for different needs"]]}}
+  ],
+  quiz:[
+   {q:"Which is a best practice when supporting vulnerable students?",o:["Announce their needs to the whole group","Maintain confidentiality and dignity and avoid labelling","Exclude them from leadership","Move them to separate clubs"],a:1,why:"Confidentiality, dignity and avoiding stigma are core practices."},
+   {q:"Which is an indicator of gender equity?",o:["Only boys hold leadership roles","Balanced club membership by gender and fair distribution of leadership","Girls attend on separate days","No attendance records are kept"],a:1,why:"Balanced membership, equal participation and fair leadership are indicators."},
+   {q:"Inclusion of children with disabilities means…",o:["They watch from the side","They participate fully, actively and meaningfully, with barriers removed","They only join once a year","Parents lead their sessions"],a:1,why:"Inclusion is full, active and meaningful participation."},
+   {q:"Which method helps identify students needing support?",o:["Attendance monitoring and teacher referrals","Guessing from appearance","Ranking by family income publicly","Waiting for complaints"],a:0,why:"Observation, attendance monitoring, referrals and talks with parents are the listed methods."}
+  ]},
+{ id:5, title:"Volunteers and the Reading Buddy Programme", mins:40,
+  intro:"Volunteers strengthen learning support. Good recruitment, selection, supervision and recognition make the programme safe, effective and lasting.",
+  sections:[
+   {h:"Recruitment", l:["Sources: senior students and peer leaders, parents and caregivers, community members, retired teachers and professionals, youth groups, alumni and former club members.","Process: identify needs and roles, write role descriptions, advertise, do outreach, receive applications, screen and select, then orient and train.","Keep records of applications and placements and ensure transparency and equal opportunity."]},
+   {h:"Selection criteria", l:["Commitment to children and education, communication skills, reliability, positive attitude, respect for diversity, teamwork and adequate literacy skills.","Process: review applications, interview where needed, verify references, assess suitability for working with children, decide transparently and notify with orientation.","Principles: fairness, non-discrimination, child safeguarding and alignment with programme objectives."]},
+   {h:"Responsibilities, support and recognition", l:["Volunteers attend orientation, support activities, encourage participation, follow safeguarding rules, keep confidentiality and report concerns.","Professional conduct: punctual, respectful, maintain professional boundaries, positive role models.","Support: orientation and training, ongoing supervision and feedback, resources and clear reporting procedures.","Recognition: certificates of appreciation, public thanks, acknowledgment letters, extra learning and leadership opportunities."]},
+   {h:"Reading Buddy Programme", l:["Pairs students with trained volunteers or peer mentors who give regular reading support and encouragement.","Buddies can be community volunteers, senior students, peer mentors, parents or club volunteers.","Steps: recruit and orient buddies, identify students needing support, match, set a regular schedule, hold sessions, monitor attendance and progress, review and adjust."]},
+   {h:"Sample reading session (40 minutes)", table:{head:["Activity","Duration"],rows:[["Welcome and review","5 minutes"],["Guided reading","15 minutes"],["Discussion and comprehension questions","10 minutes"],["Vocabulary practice","5 minutes"],["Summary and encouragement","5 minutes"]]}}
+  ],
+  quiz:[
+   {q:"Which step comes right after receiving applications?",o:["Provide orientation","Screen and select suitable candidates","Advertise the opportunity","Write role descriptions"],a:1,why:"Order: needs and roles, descriptions, advertise, outreach, applications, screen and select, orientation."},
+   {q:"How long is the guided reading part of the sample reading buddy session?",o:["5 minutes","10 minutes","15 minutes","20 minutes"],a:2,why:"Guided reading is 15 minutes of the 40-minute session."},
+   {q:"Which is a volunteer recognition method?",o:["Certificates of appreciation and public thanks where appropriate","Ignoring contributions","Paying learners","Removing supervision"],a:0,why:"Certificates, acknowledgment letters and public appreciation are listed."},
+   {q:"Who may serve as a reading buddy?",o:["Only teachers","Only paid staff","Volunteers, senior students, peer mentors, parents or club volunteers","Only strangers from outside the community"],a:2,why:"Reading buddies come from several groups, provided they are trained and supervised."}
+  ]},
+{ id:6, title:"Literacy Session Design", mins:30,
+  intro:"Well-structured sessions balance teacher guidance, collaboration, independent practice and assessment while keeping learners active and included.",
+  sections:[
+   {h:"A 90-minute session", table:{head:["Time","Activity","Purpose"],rows:[["10 min","Welcome and warm-up","Review previous learning and activate prior knowledge"],["15 min","Explicit skill instruction","Introduce or model the target skill"],["20 min","Guided practice","Practise the skill with teacher support"],["25 min","Small group / station activities","Differentiate instruction and increase participation"],["15 min","Independent practice","Reinforce learning and build confidence"],["5 min","Reflection and closing","Review objectives and assess understanding"]]}},
+   {h:"Weekly skill rotation", table:{head:["Day","Focus skill"],rows:[["Monday","Phonemic awareness and vocabulary development"],["Tuesday","Reading fluency"],["Wednesday","Reading comprehension"],["Thursday","Writing skills"],["Friday","Integrated literacy practice and assessment"]]}},
+   {h:"Grouping arrangements", l:["Whole class: introduce concepts, model strategies, shared reading.","Small group: targeted and differentiated skill work, guided reading and writing.","Pairs: peer reading, vocabulary practice, discussion.","Individual: independent reading, writing practice, assessment tasks.","Rotate group membership and group by instructional need."]},
+   {h:"Effective facilitation", l:["Create a positive environment with clear routines.","Ask open-ended questions and give adequate wait time.","Model skills and think aloud.","Give specific, constructive feedback and address misconceptions promptly.","Use games, storytelling and discussion to engage everyone.","Use formative assessment and adjust instruction."]}
+  ],
+  quiz:[
+   {q:"How many minutes are given to small group / station activities in a 90-minute session?",o:["10","15","20","25"],a:3,why:"Small group / station activities take 25 minutes."},
+   {q:"Which day of the weekly rotation focuses on reading comprehension?",o:["Monday","Tuesday","Wednesday","Thursday"],a:2,why:"Monday phonemic awareness and vocabulary, Tuesday fluency, Wednesday comprehension, Thursday writing, Friday integration and assessment."},
+   {q:"Small-group instruction is mainly used for…",o:["Targeted, differentiated skill development","Announcements","Silent exams only","Replacing independent practice"],a:0,why:"Small groups allow differentiated instruction and guided reading and writing."},
+   {q:"Giving learners adequate wait time is part of…",o:["Effective questioning techniques","Book care","Financial reporting","Volunteer screening"],a:0,why:"Open-ended questions plus wait time encourage thinking and discussion."}
+  ]},
+{ id:7, title:"Reading Development Activities", mins:35,
+  intro:"Ten interactive strategies give learners meaningful interaction with text before, during and after reading.",
+  sections:[
+   {h:"The ten reading strategies", table:{head:["Activity","What it is","Main benefit"],rows:[["Picture Walk","Examine illustrations before reading; predict and learn vocabulary","Builds background knowledge and curiosity"],["Read-Aloud","Teacher reads aloud with expression and pauses to discuss","Models fluency, builds listening comprehension"],["Paired Reading","Two learners take turns reading and help each other","Builds confidence and fluency"],["Tracking Print","Follow each word with a finger or pointer","Develops print awareness"],["Decoding Strategies","Sound out, break into syllables, word parts, picture clues, sight words","Builds independence and accuracy"],["Turn and Talk","Discuss a question with a partner, then share","Strengthens speaking and listening"],["Retelling","Recount beginning, middle and end in own words","Shows comprehension and text structure"],["Rereading","Read the same text more than once","Builds fluency and comprehension"],["Sequencing","Arrange events with first, next, then, finally","Develops logical thinking and storytelling"],["Think-Aloud","Teacher voices thoughts while reading","Models comprehension strategies"]]}},
+   {h:"Picture Walk procedure", l:["Show the cover and illustrations","Ask what learners notice","Encourage predictions","Introduce unfamiliar vocabulary","Read, then compare predictions with the story"]},
+   {h:"Think-Aloud procedure", l:["Read a section aloud","Pause to share thoughts","Make predictions, ask questions and clarify","Explain how meaning is built","Invite learners to practise thinking aloud"]}
+  ],
+  quiz:[
+   {q:"Which activity is done BEFORE reading to activate prior knowledge?",o:["Rereading","Picture Walk","Retelling","Sequencing"],a:1,why:"A Picture Walk is a pre-reading activity using the illustrations."},
+   {q:"Which strategy has the teacher voice their thoughts while reading to model comprehension?",o:["Think-Aloud","Paired Reading","Tracking Print","Turn and Talk"],a:0,why:"Think-Aloud models how meaning is constructed."},
+   {q:"Which activity teaches learners to follow text accurately with a finger or pointer?",o:["Retelling","Read-Aloud","Tracking Print","Decoding"],a:2,why:"Tracking Print develops print awareness and accuracy."},
+   {q:"Sequence words used in Sequencing and Retelling include…",o:["Because, however, although","First, next, then, finally","Who, what, where","Add, subtract, divide"],a:1,why:"First, next, then and finally are the sequence words listed."}
+  ]},
+{ id:8, title:"Writing Development Activities", mins:35,
+  intro:"Writing activities help learners express ideas, organise thoughts and communicate for different purposes and audiences.",
+  sections:[
+   {h:"The eight writing strategies", table:{head:["Activity","What it is","Main benefit"],rows:[["Quick Write","3–5 minutes of continuous writing to a prompt; ideas over correctness","Writing fluency and confidence"],["Letter Writing","Personal, friendly, thank-you, invitation and formal letters","Communication and organisation"],["Scrambled Sentences","Arrange mixed-up words into meaningful sentences","Grammar and word order"],["Predict–Respond–Confirm–Write (PRCW)","Predict, respond, read to confirm, then write","Connects reading and writing"],["Sketch-to-Stretch","Draw understanding, explain, then write about the sketch","Supports visual learners; bridge to writing"],["List–Group–Label","List related words, group, label, then write","Vocabulary and categorising"],["Story Writing","Characters, setting, problem, solution; plan, draft, revise, edit, share","Creativity and structure"],["Mini-Books and Class Publications","Compile pages into books for a real audience","Pride, ownership, editing skills"]]}},
+   {h:"Story structure", l:["Beginning: introduces characters and setting","Middle: presents the problem or main events","End: resolves the story and concludes events"]},
+   {h:"Publishing ideas", l:["Class storybooks","Poetry collections","Community newsletters","Science reports","Cultural heritage booklets"]}
+  ],
+  quiz:[
+   {q:"In a Quick Write, what is emphasised?",o:["Perfect spelling","Writing ideas continuously rather than correctness","Copying from the board","Silent reading"],a:1,why:"Quick Write focuses on ideas, not correctness, in about 3–5 minutes."},
+   {q:"Which activity asks learners to draw their understanding first?",o:["Scrambled Sentences","Letter Writing","Sketch-to-Stretch","Quick Write"],a:2,why:"Sketch-to-Stretch bridges drawing and speaking to writing."},
+   {q:"What does PRCW stand for?",o:["Plan–Read–Check–Write","Predict–Respond–Confirm–Write","Prepare–Review–Copy–Write","Picture–Read–Circle–Write"],a:1,why:"PRCW is Predict–Respond–Confirm–Write."},
+   {q:"The middle of a story usually…",o:["Introduces the setting only","Presents the problem or main events","Ends the story","Lists the title"],a:1,why:"Beginning introduces characters and setting, middle presents the problem or events, end resolves."}
+  ]},
+{ id:9, title:"Reading Corners and Book Management", mins:30,
+  intro:"A reading corner is a comfortable, inviting space where learners access books. Good organisation, care and borrowing systems keep materials available for everyone.",
+  sections:[
+   {h:"Establishing a reading corner", l:["Choose a quiet, well-lit, accessible location with ventilation and seating.","Use shelves, racks, mats, tables or chairs according to resources.","Display books attractively, with covers facing out, organised by age, subject or level.","Decorate with posters, reading quotes and student work; keep it clean.","Involve students in organising and maintaining the corner."]},
+   {h:"Organising materials", l:["Sort by subject, language, genre or reading level and label shelves clearly.","Separate reference materials from storybooks.","Suggested categories: fiction, non-fiction, science and technology, social studies, language and literature, reference, children's picture books, newspapers and magazines."]},
+   {h:"Book care", l:["Wash hands, turn pages gently, never fold pages or write inside, use bookmarks.","Keep books away from food, water and direct sunlight and shelve them after use.","Inspect regularly, repair tears, reinforce covers and remove damaged books for repair."]},
+   {h:"Borrowing system", l:["Learner selects a book, details go in the register or card, borrower confirms receipt and a return date is set.","On return the book is checked for condition and recorded.","Record: title, ID number, borrower, date borrowed, due date, date returned and condition.","Rules: borrow only the permitted number, return on time, report damage at once."]}
+  ],
+  quiz:[
+   {q:"Where should a reading corner be located?",o:["A dark storeroom","A quiet, well-lit, easily accessible area","Outside in direct sun","Inside the principal's office"],a:1,why:"Choose a quiet, well-lit and accessible area."},
+   {q:"Which is NOT recorded in a borrowing register?",o:["Book identification number","Due date","Condition of the book on return","The learner's home address and income"],a:3,why:"The register records book and borrowing details, not family information."},
+   {q:"How should books be marked rather than folding page corners?",o:["Use bookmarks","Write notes","Tear a strip","Use tape"],a:0,why:"Bookmarks protect books."},
+   {q:"Why separate reference materials from storybooks?",o:["Reference books are never read","It makes materials easier to find and use","Storybooks are more expensive","It is required by law"],a:1,why:"Clear organisation helps independent use and reduces loss."}
+  ]},
+{ id:10, title:"Reading Promotion Activities and Literacy Events", mins:30,
+  intro:"Events and recognition motivate learners, celebrate progress and bring families and communities into literacy work.",
+  sections:[
+   {h:"Events at a glance", table:{head:["Event","Aim","Examples"],rows:[["Reading competitions","Motivate reading, fluency and confidence","Reading aloud contests, quizzes, book reviews, marathons, vocabulary challenges"],["Storytelling festivals","Preserve culture, build listening and speaking","Folk tales, elder storytelling, dramatisations"],["Reading Days","Celebrate reading across the school or community","Silent reading, read-alouds, book exhibitions"],["Literacy fairs","Showcase achievements, involve the community","Book displays, writing displays, games and quizzes"],["Parent literacy events","Build school–family partnerships","Parent-child reading, family storytelling evenings, workshops"]]}},
+   {h:"Organising a competition", l:["Define objectives and rules","Select age-appropriate materials","Set clear judging criteria and form a judging committee","Run it fairly and transparently","Recognise participants and winners"]},
+   {h:"Recognition and awards", l:["Types: certificates, reading badges, medals or trophies, book prizes, public recognition, reading champion awards.","Criteria: books read, comprehension, participation in events, improvement and leadership in promoting reading.","Guidelines: clear and fair criteria, recognise effort as well as achievement, equal opportunity, celebrate individuals and groups, recognise regularly.","Sample categories: Best Reader of the Month, Most Improved Reader, Reading Champion, Best Storyteller, Literacy Ambassador, Outstanding Family Reader."]}
+  ],
+  quiz:[
+   {q:"Which award category recognises learners showing significant progress?",o:["Best Storyteller","Most Improved Reader","Literacy Ambassador","Outstanding Family Reader"],a:1,why:"Most Improved Reader recognises significant progress."},
+   {q:"Recognition should reward…",o:["Only the top scorer","Effort as well as achievement","Only older learners","Only those who pay a fee"],a:1,why:"Guidelines say to recognise effort as well as achievement."},
+   {q:"What is the aim of storytelling festivals?",o:["Preserve cultural heritage and build listening and speaking skills","Replace classroom lessons","Sell books","Test arithmetic"],a:0,why:"They preserve heritage and build oral communication."},
+   {q:"What should be set before a reading competition?",o:["Clear rules, judging criteria and a judging committee","Nothing; improvise on the day","Only the prize budget","The winners"],a:0,why:"Fair competitions need objectives, rules, criteria and judges."}
+  ]},
+{ id:11, title:"Parent and Community Engagement", mins:25,
+  intro:"Parents, communities and the PTSA are essential partners for resources, volunteers and a lasting reading culture.",
+  sections:[
+   {h:"Parents", l:["Encourage regular reading at home, provide time and space, read and discuss stories with children.","Monitor progress, support events, and talk regularly with teachers.","Home activities: family reading, storytelling, reading newspapers and magazines together, homework support, visiting libraries and reading corners."]},
+   {h:"Community", l:["Donate books, help set up reading corners, volunteer, sponsor events and provide safe spaces.","Stakeholders: local leaders, religious institutions, youth associations, women's groups, NGOs, libraries and cultural centres."]},
+   {h:"PTSA", l:["Advocate for literacy, mobilise resources, support reading corners, organise campaigns and events.","Encourage parent involvement, coordinate volunteers, assist competitions and fairs, monitor implementation."]},
+   {h:"Community storytelling", l:["Types: community evenings, cultural story-sharing, competitions, elder-and-youth sessions, mobile storytelling, school-community festivals.","Best practice: use local languages, include diverse cultures, encourage audience participation and link storytelling to reading and writing."]}
+  ],
+  quiz:[
+   {q:"What does PTSA stand for in the manual?",o:["Parent-Teacher-Student Association","Public Teaching Support Agency","Primary Teacher Skills Academy","Parent Training and Study Association"],a:0,why:"Parent-Teacher-Student Association."},
+   {q:"Which is a home-based literacy activity?",o:["Family reading sessions and storytelling","Skipping school","Banning books","Silent punishment"],a:0,why:"Family reading, storytelling and homework support are listed."},
+   {q:"Which is a PTSA contribution?",o:["Fundraising for books and materials","Grading learners' exams","Appointing teachers","Printing certificates only"],a:0,why:"PTSA fundraises, organises awareness, coordinates volunteers and supports events."},
+   {q:"Community storytelling should use…",o:["Local languages where appropriate","Only foreign languages","No audience","Only written scripts"],a:0,why:"Best practice includes local languages and active audience participation."}
+  ]},
+{ id:12, title:"Child Protection and Safe Learning", mins:40,
+  intro:"All literacy activities must protect the safety, dignity and well-being of every child. This module is essential for facilitators, volunteers and club leaders.",
+  sections:[
+   {h:"Core protection principles", l:["Best interests of the child: welfare and development come first.","Do no harm: avoid and minimise physical, emotional and psychological risk.","Respect and dignity: fairness, kindness, privacy and confidentiality.","Non-discrimination: equal opportunity regardless of gender, disability, ethnicity, language, religion or socioeconomic status.","Participation: listen to children and take their concerns seriously."]},
+   {h:"Safe volunteer practice", l:["Screen volunteers, verify references and ensure they understand protection requirements before starting.","Volunteers treat children respectfully, use positive language, model responsible behaviour and respect privacy.","Volunteers must NOT use corporal punishment or humiliating discipline, engage in inappropriate physical contact, discriminate, use abusive language, or be alone with a child in isolated settings whenever possible.","Provide training on protection, safeguarding, positive discipline, inclusion and emergency response; supervise and document concerns."]},
+   {h:"Preventing bullying", l:["Forms: physical, verbal, social and cyberbullying.","Prevent with clear expectations, respect and inclusion, conflict-resolution skills, easy reporting and quick, consistent response.","When bullying occurs: ensure immediate safety, listen to all parties, document, follow reporting procedures, support affected learners and apply corrective measures."]},
+   {h:"Gender-sensitive facilitation", l:["Equal participation, inclusive language, equitable access and respect for diversity.","Rotate leadership roles, encourage quieter learners, use examples reflecting girls and boys, monitor for bias and address discrimination immediately."]}
+  ],
+  quiz:[
+   {q:"Which principle puts the child's welfare and development above all other considerations?",o:["Do no harm","Best interests of the child","Participation","Non-discrimination"],a:1,why:"Best interests of the child is the first principle."},
+   {q:"What should a volunteer avoid whenever possible?",o:["Being alone with a child in an isolated or unsupervised setting","Using positive language","Attending training","Respecting privacy"],a:0,why:"Volunteers should avoid isolated, unsupervised one-to-one situations."},
+   {q:"Which is NOT a form of bullying in the manual?",o:["Physical","Verbal","Social","Voluntary"],a:3,why:"The manual lists physical, verbal, social and cyberbullying."},
+   {q:"When bullying is reported, the first priority is to…",o:["Ensure the immediate safety of those involved","Ignore it","Publicly shame the child","Wait a month"],a:0,why:"Safety comes first, then listening, documenting, reporting and support."}
+  ]},
+{ id:13, title:"Monitoring, Evaluation and Reporting", mins:35,
+  intro:"Monitoring tells the club whether activities are working and helps leaders make evidence-based decisions.",
+  sections:[
+   {h:"Monitoring cycle", l:["Plan activities and targets","Collect data regularly","Analyse findings","Report results","Implement improvements","Review and monitor continuously"]},
+   {h:"Key performance indicators", table:{head:["Area","Sample indicators"],rows:[["Participation","Members enrolled, average attendance rate, events held, parent and community participation"],["Reading","Books read per learner, fluency and comprehension improvement, frequency of reading activities"],["Writing","Writing activities completed, quality, spelling and grammar, competition participation"],["Resources","Books available and borrowed, reading corners established, materials available"]]}},
+   {h:"Good KPIs are SMART", p:"Specific, Measurable, Achievable, Relevant and Time-bound."},
+   {h:"Attendance, reading and writing progress", l:["Keep an attendance register for every session and follow up repeated absences; indicators include participants, average attendance %, retention and new members.","Monitor reading fluency, accuracy, comprehension, vocabulary and confidence using assessments, checklists, oral reading, reading logs and book reviews.","Monitor writing: handwriting, spelling, grammar, sentence construction, creativity and organisation using samples, portfolios, observation and rubrics."]},
+   {h:"Reporting", l:["Types: weekly activity, monthly progress, quarterly monitoring, annual performance and event reports.","Contents: activities, attendance data, reading and writing achievements, challenges, actions and recommendations, success stories.","Principles: accuracy, timeliness, completeness, objectivity and clarity."]}
+  ],
+  quiz:[
+   {q:"What does the “M” in SMART stand for?",o:["Motivated","Measurable","Managed","Mandatory"],a:1,why:"Specific, Measurable, Achievable, Relevant, Time-bound."},
+   {q:"Which is a reading indicator?",o:["Number of books read per learner","Treasurer's salary","Number of chairs","Weather records"],a:0,why:"Books read, fluency and comprehension are reading indicators."},
+   {q:"What should follow repeated absences?",o:["Follow-up with the learner","Remove the learner from the register","Nothing","Public announcement"],a:0,why:"Attendance monitoring includes following up repeated absences."},
+   {q:"Which is a reporting principle?",o:["Accuracy","Secrecy","Exaggeration","Delay"],a:0,why:"Accuracy, timeliness, completeness, objectivity and clarity."}
+  ]},
+{ id:14, title:"Sustainability and Institutionalization", mins:30,
+  intro:"Sustainability makes the club a lasting part of school and community life instead of a short-term project.",
+  sections:[
+   {h:"Link to the School Improvement Plan (SIP)", l:["Include literacy goals in the SIP and align club activities with academic priorities.","Integrate literacy indicators into school performance monitoring and involve school leadership in planning and review."]},
+   {h:"Integrate into school structures", l:["Assign a club coordinator, put activities in the school calendar and integrate with co-curricular programmes.","Establish literacy committees and discuss literacy in staff meetings.","Benefits: continuity, less dependence on individual volunteers and stronger ownership."]},
+   {h:"Resource mobilisation and leadership", l:["Sources: parents, PTSA, community organisations, local businesses, government institutions and NGOs.","Strategies: awareness campaigns, partnerships, fundraising, book donation drives and recognition of contributors.","Build leadership by training facilitators and club leaders, mentoring student leaders and building PTSA capacity."]},
+   {h:"Long-term sustainability", l:["Elements: institutional support, community ownership, resources, effective leadership and continuous improvement.","Strategies: annual literacy action plans, local partnerships, accurate records, regular training of new facilitators, integration into school culture and learner leadership.","Indicators: the club stays active year after year, membership grows, community participation stays strong, resources are adequate and outcomes keep improving."]},
+   {h:"Practical toolkit (annexes in the manual)", l:["Volunteer recruitment form and selection scorecard","Volunteer code of conduct and child safeguarding guidelines (including an incident report form)","Reading buddy monitoring tools: session log, progress tracker, observation checklist, programme indicators and student feedback survey"]}
+  ],
+  quiz:[
+   {q:"Why link the club to the School Improvement Plan?",o:["It secures long-term support and aligns with school priorities","It reduces attendance","It removes the need for volunteers","It stops reporting"],a:0,why:"SIP integration strengthens commitment, resources and accountability."},
+   {q:"Which reduces dependence on individual volunteers?",o:["Integrating the club into school structures","Hiding records","Avoiding training","Removing the coordinator"],a:0,why:"Assigning a coordinator, calendar and committees builds continuity."},
+   {q:"Which is a sustainability indicator?",o:["The club remains active year after year","Records are lost","Membership shrinks","Resources run out"],a:0,why:"Continued activity, growing membership and strong community participation are indicators."},
+   {q:"A book donation drive is part of…",o:["Community resource mobilisation","Gender equity","Bullying response","Attendance register"],a:0,why:"Donation drives are a resource mobilisation strategy."}
+  ]}
+];
+
+/* ============================================================
+   External resources
+   ============================================================ */
+const yt = q => "https://www.youtube.com/results?search_query=" + encodeURIComponent(q);
+const R = {
+ JPAL:{k:"video",t:"Teaching at the Right Level: inside the classroom",u:"https://www.povertyactionlab.org/node/4599",d:"J-PAL and Pratham videos showing TaRL in real classrooms."},
+ JOLLY:{k:"audio",t:"Jolly Songs: 42 letter-sound songs",u:"https://jollylearning.com/us/jollysongs",d:"Letter-sound songs as audio (Apple Music, Spotify) and video (YouTube)."},
+ PRF:{k:"read",t:"Put Reading First",u:"https://www.readingrockets.org/resources/resource-library/put-reading-first-research-building-blocks-teaching-children-read",d:"Research-based guide to phonemic awareness, phonics, fluency, vocabulary and comprehension."},
+ RR:{k:"video",t:"Reading Rockets: classroom strategies and videos",u:"https://www.readingrockets.org",d:"Teaching videos and strategy guides for reading and writing."},
+ SAL:{k:"audio",t:"Storybooks African Languages",u:"https://global-asp.github.io/storybooks-african-languages",d:"Free dual-language stories including Amharic, many with audio."},
+ ASB:{k:"read",t:"African Storybook",u:"https://africanstorybook.org",d:"Free, openly licensed children's stories in many African languages."},
+ BLOOM:{k:"tool",t:"Bloom Library and Bloom Editor",u:"https://bloomlibrary.org",d:"Read, adapt and create books in local languages, including mini-books."},
+ SW:{k:"tool",t:"StoryWeaver",u:"https://storyweaver.org.in",d:"Free stories to read, translate and make your own."},
+ BD:{k:"read",t:"Book Dash",u:"https://bookdash.org",d:"Free, openly licensed African children's books."},
+ GDL:{k:"read",t:"Global Digital Library",u:"https://digitallibrary.io",d:"Free early-grade reading books in many languages."},
+ SLO:{k:"video",t:"Storyline Online",u:"https://www.storylineonline.net",d:"Videos of picture books read aloud, a model for read-aloud technique."},
+ KCS:{k:"tool",t:"Keeping Children Safe",u:"https://www.keepingchildrensafe.global",d:"Free safeguarding templates, self-assessment tools, videos and online courses."},
+ TARL:{k:"tool",t:"Teaching at the Right Level",u:"https://www.teachingattherightlevel.org",d:"Resources and toolkits for the TaRL approach."},
+ CANVA:{k:"tool",t:"Canva",u:"https://www.canva.com",d:"Free design tool for certificates, badges, posters and flyers."},
+ GF:{k:"tool",t:"Google Forms",u:"https://docs.google.com/forms",d:"Build registers, feedback surveys and volunteer application forms."},
+ GS:{k:"tool",t:"Google Sheets",u:"https://docs.google.com/spreadsheets",d:"Attendance registers, borrowing logs and progress trackers."},
+ GD:{k:"tool",t:"Google Docs",u:"https://docs.google.com/document",d:"Meeting minutes, annual plans and reports."},
+ Y:(t,d)=>({k:"video",s:1,t:"YouTube search: "+t,u:yt(t),d})
+};
+const RES = {
+ 1:[R.JPAL,R.JOLLY,R.PRF,R.SAL],
+ 2:[R.RR,R.SLO,R.ASB],
+ 3:[R.GD,R.GS,R.Y("running effective meetings minutes agenda","Short tutorials on agendas and minutes.")],
+ 4:[R.Y("inclusive education children with disabilities classroom","Practical examples of adapting activities.") ,R.Y("gender equity in the classroom teachers","Ideas for balanced participation."),R.KCS],
+ 5:[R.Y("reading buddies program volunteers children","Examples of buddy reading sessions."),R.KCS,R.GF],
+ 6:[R.JPAL,R.TARL,R.RR],
+ 7:[R.Y("picture walk before reading strategy","Demonstrations of the Picture Walk."),R.Y("think aloud reading strategy teacher","Modelling comprehension aloud."),R.Y("paired reading strategy classroom","Partner reading in practice."),R.SLO,R.JOLLY],
+ 8:[R.BLOOM,R.SW,R.Y("sketch to stretch strategy","Drawing to writing demonstrations."),R.Y("quick write strategy classroom","Short writing prompts in action.")],
+ 9:[R.BD,R.ASB,R.BLOOM,R.GDL,R.GS],
+ 10:[R.SLO,R.Y("school storytelling festival children","Ideas for festivals and contests."),R.CANVA],
+ 11:[R.Y("family literacy reading at home parents","Short guides for parents."),R.RR,R.SAL],
+ 12:[R.KCS,R.Y("child safeguarding training for volunteers","Introductory safeguarding training videos."),R.Y("preventing bullying in schools teachers","Practical anti-bullying strategies.")],
+ 13:[R.GS,R.GF,R.Y("oral reading fluency assessment words correct per minute","How to run a one-minute fluency check.")],
+ 14:[R.TARL,R.GD,R.CANVA]
+};
+MODULES.forEach(m => m.res = RES[m.id] || []);
+
+const V = (t,u,d) => ({k:"video",t,u,d});
+const VID = {
+ 1:[V("Pratham: Teaching at the Right Level","https://www.youtube.com/watch?v=EDFgH9AsTFI","Video on grouping children by learning level, the idea behind TaRL."),V("Reading Rockets: Watch & Learn, Phonemic Awareness","https://www.youtube.com/playlist?list=PLLxDwKxHx1yIwS_qsyMiFto4wxOx8R519","Playlist of short videos on hearing and working with sounds in words.")],
+ 5:[V("Safeguarding for volunteers, part 1","https://www.youtube.com/watch?v=YU_IMg_kdl8","Introduction to safeguarding for people who volunteer with children."),V("Volunteer tutor child safeguarding training","https://www.youtube.com/watch?v=DAN5Zz0z4DQ","Safeguarding training aimed at volunteer tutors.")],
+ 6:[V("Teaching at the Right Level: classroom experiences","https://www.youtube.com/watch?v=a2uvBpxEohg","Teachers describe how they use TaRL in their classrooms.")],
+ 7:[V("How to do a Picture Walk","https://www.youtube.com/watch?v=rD0RhSM1vf0","Demonstration of a Picture Walk before reading."),V("How and why to do a Picture Walk through","https://www.youtube.com/watch?v=Bhbxu90Vkzc","Shared reading tip on walking through the pictures first."),V("Think Alouds: modeling ways to think about text","https://www.youtube.com/watch?v=G0ZHimY5YZo","Virtual tour of Think-Aloud modelling in a classroom."),V("Think Aloud for Read Aloud","https://www.youtube.com/watch?v=wPsOK3Qg3dY","Using Think-Aloud while reading a text out loud."),V("Pal Reading: paired reading for fluency and comprehension","https://www.youtube.com/watch?v=_dUrS_4GHa4","Learners reading in pairs to build fluency."),V("Partner reading routine for the classroom","https://www.youtube.com/watch?v=CquwCa1gckY","A simple routine for partner reading.")],
+ 8:[V("Sketch to Stretch","https://www.youtube.com/watch?v=_C9K58v5Mrc","Drawing understanding first, then talking and writing about it."),V("How to fold an 8-page mini-book","https://www.youtube.com/watch?v=_O3VW9UDdpg","Folding one sheet of paper into a mini-book for learner writing.")],
+ 9:[V("Reading corner in the classroom","https://www.youtube.com/watch?v=0PEEbho1NSA","Ideas for setting up a reading corner."),V("How I organize my classroom library","https://www.youtube.com/watch?v=1njC1XsBq8w","One teacher shows how books are sorted and labelled.")],
+ 12:[V("Introduction to safeguarding","https://www.youtube.com/watch?v=CxMogiacJ_I","Basic safeguarding ideas for anyone working with children."),V("Safeguarding training for teachers and school staff","https://www.youtube.com/watch?v=24KyLtqk270","Safeguarding training aimed at school staff."),V("How educators can respond to bullying","https://www.youtube.com/watch?v=_Uzx6Defq8k","Practical ways to respond when bullying happens.")],
+ 13:[V("How to give a quick fluency assessment","https://www.youtube.com/watch?v=B2zlcEcyfK4","Running a short oral reading check with one learner.")]
+};
+MODULES.forEach(m => { m.vid = (VID[m.id]||[]).concat(m.res.filter(r => r.k==='video')); m.res = m.res.filter(r => r.k!=='video'); });
+
+/* ============================================================
+   Practice tasks
+   ============================================================ */
+const PRACTICE = {
+ 1:{title:"Map your school's literacy picture",task:"Choose one grade at your school (or imagine one). Write a short literacy snapshot: the problem, a goal and your first actions.",steps:["Name one specific literacy challenge, for example Grade 2 learners who cannot read simple words","Write one SMART goal with a number and a date","Pick three actions from the seven key components","Decide how you will check progress (assessment, observation or student work)"],prompt:"Write your challenge, your goal, your three actions and how you will check progress.",model:"a specific grade and problem, a measurable goal with a deadline (such as 80% of Grade 2 reading 40 words correct per minute by June), actions that match the seven components, and a simple way to check progress."},
+ 2:{title:"Plan one integrated club session",task:"Sketch one club session that brings reading, writing, speaking and listening together in a way that every learner can join.",steps:["Include one reading activity","Include one writing activity","Include one speaking or listening activity","Show how a struggling reader can take part","Link the session to at least two guiding principles"],prompt:"Describe your session in 5 to 6 lines. Say which guiding principles it follows.",model:"all four skills in one session, a clear role for struggling readers, and links to principles such as voluntary and enjoyable learning, inclusiveness and learner-centred participation."},
+ 3:{title:"Draft your committee and weekly timetable",task:"Create a committee list and one weekly timetable for a club, then write the agenda for the first review meeting.",steps:["List the seven committee positions and who could fill each","Check that the committee is balanced by gender","Write a weekly timetable with day, time, venue and person responsible","Write an agenda of at least six points for your first review meeting"],prompt:"Paste your weekly timetable and your meeting agenda.",model:"every role filled, gender balance considered, a timetable with day, time, venue and a named person, and an agenda that follows welcome, previous minutes, progress, challenges, finance, decisions and closing."},
+ 4:{title:"Inclusion walk-through",task:"Walk through your club space (real or imagined) with the six-item safety and accessibility checklist and plan adaptations.",steps:["Go through all six checklist areas for your space","Describe two learner needs in general terms (no names)","Write one adaptation for each need","Write how you will protect confidentiality and dignity"],prompt:"Describe what you found, the two needs and the adaptation for each.",model:"all six areas checked, needs described without naming or labelling children, practical adaptations such as extra time or seating, and a clear confidentiality step."},
+ 5:{title:"Plan a reading buddy session",task:"Prepare the paperwork and plan for one reading buddy session.",steps:["Write a short role description for a volunteer","List four selection criteria","Plan a 40-minute session using the sample timings","List three things a volunteer must never do"],prompt:"Paste your role description and your 40-minute plan.",model:"a clear role description, criteria such as reliability and respect for diversity, a plan close to 5 + 15 + 10 + 5 + 5 minutes, and safeguarding rules such as no corporal punishment and avoiding isolated one-to-one settings."},
+ 6:{title:"Design a 90-minute session",task:"Write a full 90-minute literacy session plan for one day of the weekly rotation.",steps:["Fill all six time blocks so they add up to 90 minutes","Choose the focus skill from the weekly rotation","Plan the grouping for the 25-minute station block","Write two open-ended questions and plan your wait time"],prompt:"Paste your plan with times and activities.",model:"blocks of 10, 15, 20, 25, 15 and 5 minutes, a focus skill that matches the day, differentiated groups, and open-ended questions with wait time."},
+ 7:{title:"Practise a Picture Walk and a Think-Aloud",task:"Pick a short picture book or text and practise both strategies aloud with a colleague, a family member or a child.",steps:["Choose a short picture book or text","Write three prediction questions for the Picture Walk","Write three Think-Aloud pauses (a prediction, a question, a clarification)","Practise both strategies aloud with a real person"],prompt:"What did your listener notice or predict, and what would you change next time?",model:"honest observations about what worked, how the listener responded, and one concrete change such as asking fewer questions or giving more wait time."},
+ 8:{title:"Make a mini-book",task:"Write a short story and turn it into a mini-book that a real reader will see.",steps:["Do a 3 to 5 minute Quick Write on a prompt of your choice","Plan a story with a beginning, a middle and an end","Fold one sheet of paper into a mini-book and place your pages","Share it with a real reader"],prompt:"Write the beginning, middle and end of your story in a few lines, and who you shared it with.",model:"a clear beginning (characters, setting), a middle with a problem or events, an ending that resolves it, and a named audience."},
+ 9:{title:"Set up a reading corner",task:"Set up a reading corner (or plan one on paper) with books sorted and a borrowing system.",steps:["Choose a quiet, well-lit, accessible location","Sort at least ten books into labelled categories","Draw a borrowing register with title, ID, borrower, date borrowed, due date, date returned and condition","Write five book care rules"],prompt:"Describe where the corner is, your categories and your five rules.",model:"a suitable location, clear categories, a register with all seven columns, and simple rules such as clean hands, bookmarks instead of folded pages and returning on time."},
+ 10:{title:"Plan a reading competition",task:"Plan a fair reading competition for one grade.",steps:["Write the objectives and the rules","Choose age-appropriate materials","Write the judging criteria and name the judges","Choose three award categories and how each winner is recognised"],prompt:"Paste your objectives, rules, judging criteria and award categories.",model:"clear rules, fair and public judging criteria, a judging committee, and recognition for effort and improvement as well as top scores."},
+ 11:{title:"Reach out to parents and the community",task:"Write an invitation for a family reading evening and plan community support.",steps:["Write a short invitation to parents","Name three home literacy activities parents can do","List three community partners and what each could give","Say how the PTSA will help"],prompt:"Paste your invitation and your partner list.",model:"a warm and clear invitation in a language parents understand, simple home activities such as reading together and storytelling, specific partner contributions, and a clear PTSA role."},
+ 12:{title:"Respond to a safeguarding scenario",task:"Scenario: a 9-year-old girl tells a volunteer she is afraid of an older boy who keeps taking her book and calling her names. Plan the response.",steps:["List the immediate steps to keep her safe","Say who you would report to and how","State what you would document","Name two things a volunteer must never do in this situation"],prompt:"Describe your response step by step.",model:"immediate safety first, listening calmly, documenting what was said, following the school's reporting procedure, support for both children, and never using humiliation, punishment or private isolated meetings."},
+ 13:{title:"Build a one-page monitoring plan",task:"Create a simple plan to track your club.",steps:["Write two SMART indicators for reading","Write one SMART indicator for writing and one for participation","Design an attendance register with its columns","Outline a monthly progress report"],prompt:"Paste your indicators and your report outline.",model:"indicators that are specific, measurable and time-bound, a register with date, names and attendance, and a report with activities, attendance, achievements, challenges and next actions."},
+ 14:{title:"Write a sustainability action plan",task:"Write a short plan that keeps the club running after the first year.",steps:["Say how the club links to the School Improvement Plan","Name a coordinator and a slot in the school calendar","List three resource sources and a first step for each","Set three indicators that show the club will last"],prompt:"Paste your plan.",model:"a link to the SIP, a named coordinator and calendar slot, practical first steps for resources, and indicators such as the club staying active year after year."}
+};
+
+/* ============================================================
+   Visual explainers
+   ============================================================ */
+const flow = (cap, steps) => `<div class="vis"><div class="cap">${esc(cap)}</div><ol class="flow">${steps.map((s,i)=>`<li><b>${i+1}</b>${esc(s)}</li>`).join('')}</ol></div>`;
+const hub = (cap, center, items) => `<div class="vis"><div class="cap">${esc(cap)}</div><div class="hub"><div class="c">${esc(center)}</div>${items.map(i=>`<div class="i">${esc(i)}</div>`).join('')}</div></div>`;
+const bar = (cap, items) => `<div class="vis"><div class="cap">${esc(cap)}</div><div class="tl" role="img" aria-label="${esc(cap)}">${items.map(([n,l])=>`<div style="flex:${n} 1 0" title="${esc(l)}">${n}</div>`).join('')}</div><ul class="legend">${items.map(([n,l])=>`<li>${n} min: ${esc(l)}</li>`).join('')}</ul></div>`;
+const cols = (cap, cs) => `<div class="vis"><div class="cap">${esc(cap)}</div><div class="cols">${cs.map(([t,l])=>`<div><h4>${esc(t)}</h4><ul>${l.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`).join('')}</div></div>`;
+const VIS = {
+ 1:()=>flow("The five reading skills build on each other",["Phonemic awareness: hear the sounds","Phonics: link letters to sounds","Fluency: read smoothly","Vocabulary: know the words","Comprehension: understand the text"]),
+ 2:()=>hub("One club, four connected skills","SLLC",["Reading","Writing","Speaking","Listening"]),
+ 3:()=>hub("The club committee at a glance","Chairperson / President",["Vice Chairperson","Secretary","Treasurer","Program Coordinator","Membership Coordinator","Communications Officer"]),
+ 4:()=>flow("The inclusion cycle",["Identify learners who need support","Support with mentoring, materials and adaptations","Protect confidentiality and dignity","Follow up and involve parents"]),
+ 5:()=>flow("From volunteer to reading buddy",["Identify needs and roles","Advertise and receive applications","Screen and select","Orient and train","Match with a learner","Hold sessions and monitor"])+bar("A 40-minute reading buddy session",[[5,"Welcome and review"],[15,"Guided reading"],[10,"Discussion and questions"],[5,"Vocabulary practice"],[5,"Summary and encouragement"]]),
+ 6:()=>bar("A 90-minute literacy session",[[10,"Welcome and warm-up"],[15,"Explicit skill instruction"],[20,"Guided practice"],[25,"Small group / stations"],[15,"Independent practice"],[5,"Reflection and closing"]])+flow("Weekly skill rotation",["Monday: phonemic awareness and vocabulary","Tuesday: fluency","Wednesday: comprehension","Thursday: writing","Friday: integrated practice and assessment"]),
+ 7:()=>cols("When to use the ten strategies (a planning guide)",[["Before reading",["Picture Walk"]],["During reading",["Read-Aloud","Paired Reading","Tracking Print","Decoding Strategies","Think-Aloud"]],["After reading",["Turn and Talk","Retelling","Rereading","Sequencing"]]]),
+ 8:()=>flow("The writing process",["Plan","Draft","Revise","Edit","Share"])+cols("Story structure",[["Beginning",["Characters","Setting"]],["Middle",["The problem","Main events"]],["End",["The problem is solved","The story closes"]]]),
+ 9:()=>flow("Borrowing a book",["Learner selects a book","Details go in the register or card","Borrower confirms; return date set","Book returned and checked for condition","Return recorded"]),
+ 10:()=>flow("Organising a competition",["Define objectives and rules","Select age-appropriate materials","Set judging criteria and judges","Run it fairly and openly","Recognise participants and winners"]),
+ 11:()=>hub("Partners in a reading culture","Learners who read",["Parents and caregivers","Community members and leaders","PTSA","School and club"]),
+ 12:()=>flow("The five core protection principles",["Best interests of the child","Do no harm","Respect and dignity","Non-discrimination","Participation"]),
+ 13:()=>flow("The monitoring cycle",["Plan activities and targets","Collect data regularly","Analyse findings","Report results","Implement improvements","Review continuously"]),
+ 14:()=>hub("What makes a club last","Sustainability",["Institutional support","Community ownership","Resources","Effective leadership","Continuous improvement"])
+};
+
+/* ============================================================
+   Helpers
+   ============================================================ */
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const normEmail = e => String(e||'').trim().toLowerCase();
+const accessCode = e => { const h = sha256('access|'+CFG.salt+'|'+normEmail(e)).slice(0,8).toUpperCase(); return h.slice(0,4)+'-'+h.slice(4); };
+const certId = e => 'SLLC-' + sha256('cert|'+CFG.salt+'|'+normEmail(e)).slice(0,8).toUpperCase();
+const approvalHash = e => sha256('approve|'+CFG.salt+'|'+normEmail(e));
+const isApproved = e => !CFG.requireAllowlist || (CFG.approved||[]).map(x=>String(x).trim().toLowerCase()).includes(approvalHash(e));
+const pageBase = () => (CFG.pageUrl && CFG.pageUrl.trim()) || location.href.split('#')[0];
+
+const KEY = 'sllc-course-v1';
+let S = { learner:null, done:{}, exam:null, practice:{} };
+try { const r = localStorage.getItem(KEY); if (r) S = Object.assign(S, JSON.parse(r)); } catch(e){}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){ console.warn('Could not save progress', e); } };
+const unlocked = () => !!(S.learner && S.learner.ok);
+const doneCount = () => MODULES.filter(m => S.done[m.id]).length;
+const practiceDone = () => MODULES.filter(m => S.practice && S.practice[m.id] && S.practice[m.id].done).length;
+const allDone = () => doneCount() === MODULES.length;
+const shuffle = a => { a = a.slice(); for (let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+
+async function copy(text, btn){
+  const done = () => { if (btn){ const o = btn.textContent; btn.textContent = 'Copied'; setTimeout(() => btn.textContent = o, 1500); } };
+  try { await navigator.clipboard.writeText(text); done(); return; } catch(e){}
+  const ta = document.createElement('textarea');
+  ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
+  document.body.appendChild(ta); ta.select();
+  let ok = false; try { ok = document.execCommand('copy'); } catch(e){}
+  ta.remove();
+  if (btn){ const o = btn.textContent; btn.textContent = ok ? 'Copied' : 'Press Ctrl+C'; setTimeout(() => btn.textContent = o, 1600); }
+}
+async function downloadFile(name, blob, msgEl){
+  try {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = name; a.style.display = 'none';
+    document.body.appendChild(a); a.click();
+    setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1500);
+    if (msgEl) msgEl.textContent = '';
+    return true;
+  } catch(e){
+    if (msgEl) msgEl.textContent = 'Download failed. Use the copy button instead.';
+    return false;
+  }
+}
+
+/* ============================================================
+   Theme
+   ============================================================ */
+function currentTheme(){
+  let t = null; try { t = localStorage.getItem('sllc-theme'); } catch(e){}
+  if (t === 'light' || t === 'dark') return t;
+  return matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+function updateThemeBtn(){
+  const b = $('#theme-toggle'); if (!b) return;
+  const cur = currentTheme();
+  b.textContent = cur === 'dark' ? '☀' : '☾';
+  const label = 'Switch to ' + (cur === 'dark' ? 'light' : 'dark') + ' mode';
+  b.setAttribute('aria-label', label); b.title = label;
+}
+function applyTheme(){
+  let t = null; try { t = localStorage.getItem('sllc-theme'); } catch(e){}
+  if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+  else delete document.documentElement.dataset.theme;
+  updateThemeBtn();
+}
+applyTheme();
+$('#theme-toggle').onclick = () => {
+  const next = currentTheme() === 'dark' ? 'light' : 'dark';
+  try { localStorage.setItem('sllc-theme', next); } catch(e){}
+  document.documentElement.dataset.theme = next;
+  updateThemeBtn();
+};
+
+/* ============================================================
+   Routing
+   ============================================================ */
+let current = 'home', modIdx = 1, examState = null, invite = '', pracT = null, quizOrders = null;
+function focusHeading(){
+  const h = document.querySelector('#app h1, #app h2');
+  if (h){ h.setAttribute('tabindex','-1'); h.focus({preventScroll:true}); }
+}
+function route(){
+  const h = (location.hash||'#home').slice(1);
+  const iv = h.match(/^join-([A-Za-z0-9]{8})$/); if (iv) invite = iv[1].toUpperCase();
+  const m = h.match(/^module-(\d+)$/);
+  if (iv){ current='home'; }
+  else if (m){ current='course'; modIdx = Math.min(MODULES.length, Math.max(1, +m[1])); }
+  else current = ['home','course','portfolio','exam','certificate','instructor'].includes(h) ? h : 'home';
+  if (current !== 'exam') examState = null;
+  render();
+}
+function nav(){
+  const items = [['home','Register'],['course','Course'],['portfolio','Portfolio'],['exam','Final exam'],['certificate','Certificate']];
+  $('#nav').innerHTML = items.map(([k,t]) => `<a href="#${k}" ${current===k?'aria-current="page"':''}>${t}</a>`).join('');
+}
+function render(){
+  nav();
+  if (pracT){ clearTimeout(pracT); pracT = null; }
+  try { if (window.speechSynthesis) speechSynthesis.cancel(); } catch(e){}
+  const gated = ['course','portfolio','exam','certificate'].includes(current) && !unlocked();
+  if (gated) { $('#app').innerHTML = gate(); focusHeading(); return; }
+  ({home:viewHome, course:viewCourse, portfolio:viewPortfolio, exam:viewExam, certificate:viewCert, instructor:viewInstructor})[current]();
+  focusHeading();
+  window.scrollTo(0,0);
+}
+function gate(){
+  return `<div class="hero"><h2>This part is for approved learners</h2><p class="lead">Register and enter your access code to open the course, final exam and certificate.</p><div><a class="btn primary" href="#home">Go to registration</a></div></div>`;
+}
+
+/* ============================================================
+   Home / registration
+   ============================================================ */
+function viewHome(){
+  const L = S.learner;
+  const soc = CFG.social.url ? `<a class="btn" href="${esc(CFG.social.url)}" target="_blank" rel="noopener">Join ${esc(CFG.social.name)}</a>` : `<span class="pill">Join link: ask ${esc(CFG.ownerEmail)}</span>`;
+  $('#app').innerHTML = `
+  <section class="hero">
+    <span class="pill">${esc(CFG.org)}</span>
+    <h1>${esc(CFG.course)} online course</h1>
+    <p class="lead">${esc(CFG.sub)}. Study 14 modules at your own pace, pass the module checks and the final exam, and receive your certificate.</p>
+  </section>
+  <ol class="steps">
+    <li><b>Join and register</b>Join the social media group, then send your registration request.</li>
+    <li><b>Get approved by email</b>The course owner checks your request and emails you a personal approval link. Only approved people can join.</li>
+    <li><b>Learn, practise and certify</b>Study 14 modules with videos and visuals, do the practice tasks, pass the final exam (${CFG.passPct}%) and download your certificate.</li>
+  </ol>
+  ${unlocked() ? `<div class="card stack"><h2>Welcome back, ${esc(L.name)}</h2>
+    <div class="stat"><div><b>${doneCount()}/${MODULES.length}</b>modules completed</div><div><b>${practiceDone()}/${MODULES.length}</b>practice tasks</div><div><b>${S.exam&&S.exam.passed?S.exam.score+'%':'—'}</b>final exam</div></div>
+    <div class="row"><a class="btn primary" href="#course">${doneCount()?'Continue course':'Start course'}</a><a class="btn" href="#portfolio">My portfolio</a>${S.exam&&S.exam.passed?'<a class="btn sun" href="#certificate">View certificate</a>':''}<button id="signout">Sign out on this device</button></div></div>`
+  : `<div class="grid2">
+    <form class="card" id="reg" novalidate>
+      <h2>1. Request access</h2>${S.pending?`<div class="msg info" style="margin:8px 0">A request for ${esc(S.pending.name)} (${esc(S.pending.email)}) was prepared on this device. Waiting for the approval email? Check your spam folder, then use box 2.</div>`:''}<p class="hint" style="margin:6px 0 16px">Requirement: you must be a member of ${esc(CFG.social.name)}. Your handle lets the owner check this.</p>
+      <div class="field"><label for="rn">Full name (as it should appear on your certificate)</label><input id="rn" type="text" autocomplete="name" required></div>
+      <div class="field"><label for="re">Email address</label><input id="re" type="email" autocomplete="email" required></div>
+      <div class="field"><label for="rh">Your username on the social media group</label><input id="rh" type="text" required></div>
+      <div class="field"><label for="rs">School or organisation</label><input id="rs" type="text" autocomplete="organization"></div>
+      <div class="field"><label for="rr">Your role</label><select id="rr"><option>Teacher</option><option>School director</option><option>Club coordinator</option><option>Volunteer</option><option>Supervisor</option><option>Parent or community member</option><option>Other</option></select></div>
+      <label class="opt" style="margin-bottom:14px"><input type="checkbox" id="rj"><span>I have joined ${esc(CFG.social.name)}.</span></label>
+      <div class="row" style="margin-bottom:14px">${soc}</div>
+      <div id="regmsg" role="status" aria-live="polite"></div>
+      <button class="primary" type="submit">Prepare my request email</button>
+    </form>
+    <form class="card" id="code" novalidate>
+      <h2>${invite?'You are invited':'2. Enter your access code'}</h2><p class="hint" style="margin:6px 0 16px">${invite?'Your approval link is recognised. Enter your name and the email address your invitation was sent to, then open the course.':'After your request is approved, the course owner emails you an approval link. Open that link, or type the code from the email here (for example <b>AB12-CD34</b>).'}</p>
+      <div class="field"><label for="ce">Email you registered with</label><input id="ce" type="email" autocomplete="email"></div>
+      <div class="field"><label for="cn">Full name</label><input id="cn" type="text" autocomplete="name"></div>
+      <div class="field"><label for="cc">Access code</label><input id="cc" type="text" autocapitalize="characters" autocomplete="off" value="${invite?esc(invite.slice(0,4)+'-'+invite.slice(4)):''}"></div>
+      <div id="codemsg" role="alert" aria-live="assertive"></div>
+      <button class="primary" type="submit">Open the course</button>
+    </form></div>`}`;
+  if (unlocked()) { $('#signout').onclick = () => { if (S.learner){ S.learner.ok=false; save(); } render(); }; return; }
+  $('#reg').onsubmit = ev => {
+    ev.preventDefault();
+    const n=$('#rn').value.trim(), e=normEmail($('#re').value), h=$('#rh').value.trim(), sc=$('#rs').value.trim(), ro=$('#rr').value, j=$('#rj').checked, box=$('#regmsg');
+    if (n.length < 2 || !/^\S+@\S+\.\S+$/.test(e) || !h) { box.innerHTML='<div class="msg bad">Enter your full name, a valid email and your social media username.</div>'; return; }
+    if (!j) { box.innerHTML=`<div class="msg bad">Join ${esc(CFG.social.name)} first, then tick the box.</div>`; return; }
+    const subject = 'SLLC online course: registration request';
+    const body = `Hello,\n\nI would like to register for the ${CFG.course} online course.\n\nName: ${n}\nEmail: ${e}\nSocial media username: ${h}\nSchool: ${sc||'not given'}\nRole: ${ro}\nI have joined ${CFG.social.name}: Yes\n\nThank you.`;
+    const full = 'Subject: '+subject+'\n\n'+body, q = encodeURIComponent;
+    box.innerHTML = `<div class="stack"><div class="msg good">Registration ready, ${esc(n)}. One more step: send it to the course owner. Nothing has been sent yet.</div>
+      <h3>Send with one tap</h3>
+      <div class="row">
+        <a class="btn primary" target="_blank" rel="noopener" href="https://mail.google.com/mail/?view=cm&fs=1&to=${q(CFG.ownerEmail)}&su=${q(subject)}&body=${q(body)}">Gmail</a>
+        <a class="btn" href="mailto:${esc(CFG.ownerEmail)}?subject=${q(subject)}&body=${q(body)}">Email app</a>
+        <a class="btn" target="_blank" rel="noopener" href="https://wa.me/?text=${q(body)}">WhatsApp</a>
+        <a class="btn" target="_blank" rel="noopener" href="https://t.me/share/url?url=${q(' ')}&text=${q(body)}">Telegram</a>
+      </div>
+      <p class="hint">Gmail, WhatsApp and Telegram open in a new tab with the message filled in. In WhatsApp or Telegram, choose the course owner as the recipient. If nothing opens, use the copy buttons below.</p>
+      <div class="copyrow"><b>Send to:</b> <span id="to" style="user-select:all">${esc(CFG.ownerEmail)}</span><button type="button" id="c1">Copy address</button></div>
+      <div class="copybox" id="bd">${esc(full)}</div>
+      <div class="row"><button type="button" id="c2">Copy message</button></div>
+      <div class="msg info"><b>What happens next:</b> when the owner approves you, they email you a personal link. Open that link, enter your name and this email address (${esc(e)}), and the course opens.</div></div>`;
+    $('#c1').onclick = ev2 => copy(CFG.ownerEmail, ev2.target);
+    $('#c2').onclick = ev2 => copy(full, ev2.target);
+    $('#ce').value = e; $('#cn').value = n;
+    S.pending = {name:n, email:e, handle:h, school:sc, role:ro}; save();
+  };
+  $('#code').onsubmit = ev => {
+    ev.preventDefault();
+    const e=normEmail($('#ce').value), n=$('#cn').value.trim(), c=$('#cc').value.trim().toUpperCase().replace(/\s/g,''), box=$('#codemsg');
+    if (n.length < 2 || !e || !c) { box.innerHTML='<div class="msg bad">Fill in your full name, email and access code.</div>'; return; }
+    if (!isApproved(e)) { box.innerHTML='<div class="msg bad">This email is not on the approved list yet. Ask the course owner to approve you, then try again.</div>'; return; }
+    if (c.replace(/-/g,'') !== accessCode(e).replace('-','')) { box.innerHTML='<div class="msg bad">That code does not match this email. Check the email you registered with and copy the code exactly as sent.</div>'; return; }
+    S.learner = {name:n, email:e, ok:true, since:new Date().toISOString()}; save();
+    invite = '';
+    location.hash = '#course'; render();
+  };
+}
+
+/* ============================================================
+   Course
+   ============================================================ */
+function railHtml(){
+  return MODULES.map(m => `<button type="button" data-mod="${m.id}" class="${S.done[m.id]?'done':''}" ${m.id===modIdx&&current==='course'?'aria-current="true"':''}><span class="n">${S.done[m.id]?'✓':m.id}</span><span>${esc(m.title)}</span>${S.practice[m.id]&&S.practice[m.id].done?'<span class="pdot" title="Practice task done"></span>':''}</button>`).join('');
+}
+function viewCourse(){
+  const m = MODULES[modIdx-1], pct = Math.round(doneCount()/MODULES.length*100);
+  if (!quizOrders || quizOrders.id !== m.id) quizOrders = { id: m.id, orders: m.quiz.map(q => shuffle(q.o.map((_, i) => i))) };
+  const orders = quizOrders.orders;
+  const secs = m.sections.map(s => `<section><h3>${esc(s.h)}</h3>${s.p?`<p>${esc(s.p)}</p>`:''}${s.l?`<ul>${s.l.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:''}${s.table?`<div class="tablewrap" tabindex="0"><table><thead><tr>${s.table.head.map(h=>`<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${s.table.rows.map(r=>`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`:''}</section>`).join('');
+  const prev = S.done[m.id], prac = S.practice[m.id] && S.practice[m.id].done;
+  $('#app').innerHTML = `<div class="course">
+    <aside><details class="menu"><summary>Modules (${doneCount()}/${MODULES.length} complete)</summary><div class="rail">${railHtml()}</div></details>
+    <div class="rail" aria-label="Modules"><div style="padding:0 4px 10px"><div class="hint" style="margin-bottom:6px">${doneCount()} of ${MODULES.length} modules complete</div><div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="${MODULES.length}" aria-valuenow="${doneCount()}"><i style="width:${pct}%"></i></div></div>${railHtml()}</div></aside>
+    <article class="lesson">
+      <div class="row" style="gap:6px;align-items:center">
+        <span class="pill">Module ${m.id} of ${MODULES.length} · about ${m.mins} min</span>
+        <span class="pill ${prev?'ok':''}" id="qpill" ${prev?'':'hidden'}>${prev?`Quiz passed ${prev.score}/4`:'Quiz passed'}</span>
+        <span class="pill ${prac?'ok':''}" id="ppill" ${prac?'':'hidden'}>Practice done</span>
+        <button type="button" class="listen" id="listen" aria-pressed="false" style="min-height:32px;padding:2px 12px;font-size:.88rem">Listen to this lesson</button>
+      </div>
+      <h2>${esc(m.title)}</h2><p class="lead" style="color:var(--muted)">${esc(m.intro)}</p>
+      ${VIS[m.id]?VIS[m.id]():''}
+      ${secs}
+      ${vidBlock(m)}
+      ${m.res&&m.res.length?`<section><h3>Listen, read and tools</h3><ul class="res">${m.res.map(r=>`<li><a href="${esc(r.u)}" target="_blank" rel="noopener noreferrer"><span class="k ${r.k}">${{video:'Video',audio:'Audio',tool:'Tool',read:'Read'}[r.k]}</span><b>${esc(r.t)}</b><span class="d">${esc(r.d)}</span></a></li>`).join('')}</ul><p class="hint">Links open in a new tab on the provider's own site. They are optional extras and not part of the exam.</p></section>`:''}
+      <section><h3>Assessment 1: check your understanding</h3><p class="hint">Answer all 4 questions. You need ${CFG.passModule} correct to complete this module. You can retry as often as you like.</p>
+      <form id="qz" class="stack">${m.quiz.map((q,i)=>`<fieldset class="q"><legend>${i+1}. ${esc(q.q)}</legend>${orders[i].map(j=>`<label class="opt"><input type="radio" name="q${i}" value="${j}"><span>${esc(q.o[j])}</span></label>`).join('')}<div class="why" id="w${i}" hidden></div></fieldset>`).join('')}
+      <div id="qres" role="status" aria-live="polite"></div><div class="row"><button class="primary" type="submit">Submit answers</button></div></form></section>
+      ${practiceBlock(m)}
+      <div class="row" style="justify-content:space-between">${modIdx>1?`<a class="btn" href="#module-${modIdx-1}">Previous module</a>`:'<span></span>'}${modIdx<MODULES.length?`<a class="btn" href="#module-${modIdx+1}">Next module</a>`:`<a class="btn sun" href="#exam">${allDone()?'Take the final exam':'Final exam'}</a>`}</div>
+    </article></div>`;
+  document.querySelectorAll('[data-mod]').forEach(b => b.onclick = () => { location.hash = '#module-'+b.dataset.mod; });
+  wirePractice(m); wireListen(m);
+  $('#qz').onsubmit = ev => {
+    ev.preventDefault();
+    let score=0;
+    m.quiz.forEach((q,i) => {
+      const sel = document.querySelector(`input[name=q${i}]:checked`);
+      const opts = [...document.querySelectorAll(`input[name=q${i}]`)].map(x=>x.closest('.opt'));
+      opts.forEach(o => {
+        const v = +o.querySelector('input').value;
+        o.classList.remove('right','wrong');
+        if (v === q.a) o.classList.add('right');
+        else if (sel && +sel.value === v) o.classList.add('wrong');
+      });
+      if (sel && +sel.value === q.a) score++;
+      const w=$('#w'+i); w.hidden=false; w.textContent = (sel ? (+sel.value===q.a?'Correct. ':'Not quite. ') : 'No answer. ') + q.why;
+    });
+    const ok = score >= CFG.passModule;
+    $('#qres').innerHTML = `<div class="msg ${ok?'good':'bad'}">${ok?`You scored ${score}/4. Module complete.`:`You scored ${score}/4. You need ${CFG.passModule} to complete this module. Review the lesson and try again.`}</div>`;
+    if (ok){
+      S.done[m.id] = {score, at:new Date().toISOString()}; save();
+      document.querySelectorAll(`[data-mod="${m.id}"]`).forEach(b => { b.classList.add('done'); const n = b.querySelector('.n'); if (n) n.textContent = '✓'; });
+      const qp = $('#qpill'); if (qp){ qp.hidden = false; qp.classList.add('ok'); qp.textContent = 'Quiz passed ' + score + '/4'; }
+      updateProgressUI();
+    }
+    const r = $('#qres'); r.setAttribute('tabindex','-1'); r.focus();
+  };
+}
+function updateProgressUI(){
+  const done = doneCount(), total = MODULES.length;
+  document.querySelectorAll('.progress').forEach(p => {
+    p.setAttribute('aria-valuenow', done);
+    const i = p.querySelector('i'); if (i) i.style.width = Math.round(done/total*100) + '%';
+  });
+  document.querySelectorAll('aside .hint').forEach(h => {
+    if (/modules complete/.test(h.textContent)) h.textContent = `${done} of ${total} modules complete`;
+  });
+  document.querySelectorAll('.menu summary').forEach(s => { s.textContent = `Modules (${done}/${total} complete)`; });
+}
+
+/* ============================================================
+   Module blocks: videos, practice, listen
+   ============================================================ */
+function vidBlock(m){
+  if (!m.vid.length) return '';
+  return `<section><h3>Watch: videos for this module</h3><ul class="res vid">${m.vid.map(r=>`<li><a href="${esc(r.u)}" target="_blank" rel="noopener noreferrer"><span class="k video">${r.s?'Video search':'Video'}</span><b>${esc(r.t)}</b><span class="d">${esc(r.d)}</span></a></li>`).join('')}</ul><p class="hint">Videos open in a new tab on YouTube or the provider's own site. They are made by other organisations and may show classrooms in other countries, so adapt the ideas to your school and your local child-protection rules. They are optional and not part of the exam.</p></section>`;
+}
+function practiceBlock(m){
+  const pr = PRACTICE[m.id], ps = S.practice[m.id] || {c:[],t:''};
+  return `<section class="prac" id="prac"><div class="row"><span class="pill sunp">Practice task</span><span class="pill ok" id="pracbadge" ${ps.done?'':'hidden'}>Completed</span></div>
+    <h3>${esc(pr.title)}</h3><p>${esc(pr.task)}</p>
+    <fieldset class="stack" style="gap:8px"><legend class="hint" style="margin-bottom:6px">Tick each step when you have done it</legend>${pr.steps.map((s,i)=>`<label class="chk"><input type="checkbox" data-pc="${i}" ${ps.c&&ps.c[i]?'checked':''}><span>${esc(s)}</span></label>`).join('')}</fieldset>
+    <div class="field" style="margin:0"><label for="pt">${esc(pr.prompt)}</label><textarea id="pt" maxlength="2000">${esc(ps.t||'')}</textarea><span class="hint" id="pcount"></span></div>
+    <div id="pmsg" role="status" aria-live="polite"></div>
+    <div class="row"><button class="primary" id="psave" type="button">Save practice</button><button type="button" id="pmail">Send to the course owner for feedback</button></div>
+    <div id="pmailbox"></div></section>`;
+}
+function savePractice(m, finalise, rawOverride){
+  const pr = PRACTICE[m.id];
+  const ta = $('#pt');
+  const raw = rawOverride !== undefined ? rawOverride : (ta ? ta.value : ((S.practice[m.id]||{}).t || ''));
+  const old = S.practice[m.id] || {};
+  const c = pr.steps.map((_, i) => { const el = document.querySelector(`[data-pc="${i}"]`); return el ? !!el.checked : !!(old.c && old.c[i]); });
+  const ok = c.every(Boolean) && raw.trim().length >= CFG.practiceMinChars;
+  const done = finalise ? ok : (!!old.done && ok);
+  S.practice[m.id] = { c, t: raw, done, at: new Date().toISOString() };
+  save();
+  return ok;
+}
+function wirePractice(m){
+  const pr = PRACTICE[m.id], ta = $('#pt'); if (!pr || !ta) return;
+  const cnt = () => { $('#pcount').textContent = ta.value.trim().length + ' of ' + CFG.practiceMinChars + ' characters minimum'; };
+  cnt();
+  ta.oninput = () => {
+    cnt(); if (pracT) clearTimeout(pracT);
+    pracT = setTimeout(() => { if (document.body.contains(ta)) savePractice(m, false, ta.value); }, 350);
+  };
+  document.querySelectorAll('[data-pc]').forEach(x => x.onchange = () => savePractice(m, false));
+  $('#psave').onclick = () => {
+    if (pracT){ clearTimeout(pracT); pracT = null; }
+    const ok = savePractice(m, true, ta.value);
+    $('#pmsg').innerHTML = ok
+      ? `<div class="msg good">Practice saved and complete.</div><div class="msg info" style="margin-top:8px"><b>A strong answer includes:</b> ${esc(pr.model)}</div>`
+      : `<div class="msg bad">Saved as a draft. To complete this task, tick every step and write at least ${CFG.practiceMinChars} characters.</div>`;
+    const badge = $('#pracbadge'); if (badge) badge.hidden = !ok;
+    const pp = $('#ppill'); if (pp){ pp.hidden = !ok; pp.classList.toggle('ok', ok); pp.textContent = 'Practice done'; }
+    document.querySelectorAll(`[data-mod="${m.id}"]`).forEach(b => {
+      const dot = b.querySelector('.pdot');
+      if (ok && !dot){ const d = document.createElement('span'); d.className='pdot'; d.title='Practice task done'; b.appendChild(d); }
+      if (!ok && dot) dot.remove();
+    });
+  };
+  $('#pmail').onclick = () => {
+    if (pracT){ clearTimeout(pracT); pracT = null; }
+    savePractice(m, false);
+    const L = S.learner || {}, ps = S.practice[m.id];
+    const subject = 'SLLC practice task, module '+m.id+': '+(L.name||'');
+    const full = `Hello,\n\nPlease give feedback on my practice task.\n\nLearner: ${L.name}\nEmail: ${L.email}\nModule ${m.id}: ${m.title}\nTask: ${pr.title}\nSteps done: ${ps.c.filter(Boolean).length} of ${pr.steps.length}\n\nMy answer:\n${ps.t}\n`;
+    const short = full.length > 1500 ? full.slice(0,1500) + '\n[Text cut here. Use the copied message for the full answer.]' : full;
+    $('#pmailbox').innerHTML = `<div class="stack"><div class="row">${mailBtns(CFG.ownerEmail, subject, short)}<button type="button" id="pmc">Copy full message</button></div><p class="hint">This opens a message to ${esc(CFG.ownerEmail)} with your answer filled in. Nothing is sent until you press send.</p></div>`;
+    $('#pmc').onclick = e => copy('Subject: '+subject+'\n\n'+full, e.target);
+  };
+}
+function wireListen(m){
+  const b = $('#listen'); if (!b) return;
+  if (!('speechSynthesis' in window)) { b.hidden = true; return; }
+  const ss = window.speechSynthesis;
+  const off = () => { b.setAttribute('aria-pressed','false'); b.textContent = 'Listen to this lesson'; };
+  b.onclick = () => {
+    if (b.getAttribute('aria-pressed') === 'true') { ss.cancel(); off(); return; }
+    const parts = [m.title+'.', m.intro];
+    m.sections.forEach(s => {
+      parts.push(s.h+'.');
+      if (s.p) parts.push(s.p);
+      if (s.l) s.l.forEach(x => parts.push(x+'.'));
+      if (s.table) s.table.rows.forEach(r => parts.push(r.join(', ') + '.'));
+    });
+    ss.cancel(); b.setAttribute('aria-pressed','true'); b.textContent = 'Stop listening';
+    parts.forEach((p,i) => { const u = new SpeechSynthesisUtterance(p); u.lang = 'en-GB'; u.rate = .95; if (i === parts.length-1) u.onend = off; ss.speak(u); });
+  };
+}
+const mailBtns = (to, subject, body) => { const q = encodeURIComponent; return `<a class="btn primary" target="_blank" rel="noopener" href="https://mail.google.com/mail/?view=cm&fs=1&to=${q(to)}&su=${q(subject)}&body=${q(body)}">Gmail</a><a class="btn" href="mailto:${esc(to)}?subject=${q(subject)}&body=${q(body)}">Email app</a>`; };
+
+/* ============================================================
+   Exam
+   ============================================================ */
+function viewExam(){
+  const pass = S.exam && S.exam.passed;
+  if (!allDone()) {
+    $('#app').innerHTML = `<div class="hero"><h2>Final exam</h2><p class="lead">Complete all ${MODULES.length} modules first. You have finished ${doneCount()}.</p><div><a class="btn primary" href="#course">Back to the course</a></div></div>`; return;
+  }
+  if (!examState) {
+    $('#app').innerHTML = `<div class="hero"><span class="pill">Final exam</span><h2>Ready for your final exam?</h2>
+      <p class="lead">${CFG.examSize} multiple-choice questions drawn at random from all 14 modules. You need ${CFG.passPct}% to pass and earn your certificate. You can retake the exam; questions and answer order change each time. Your certificate also needs at least ${CFG.practiceMin} completed practice tasks (you have ${practiceDone()}).</p>
+      ${S.exam?`<div class="msg info">Best score so far: ${S.exam.score}% ${S.exam.passed?'(passed)':''}</div>`:''}
+      <div class="row"><button class="primary" id="go">Start exam</button>${pass?'<a class="btn sun" href="#certificate">View certificate</a>':''}</div></div>`;
+    $('#go').onclick = () => {
+      const pool = MODULES.flatMap(m => m.quiz.map(q => ({...q, mod:m.id})));
+      examState = shuffle(pool).slice(0, CFG.examSize).map(q => { const idx = shuffle(q.o.map((_,i)=>i)); return {q:q.q, o:idx.map(i=>q.o[i]), a:idx.indexOf(q.a), why:q.why, mod:q.mod}; });
+      viewExam();
+    };
+    return;
+  }
+  $('#app').innerHTML = `<div class="stack" style="padding-top:24px"><h2>Final exam</h2><p class="hint">Answer every question, then submit. ${CFG.examSize} questions, ${CFG.passPct}% to pass.</p>
+    <form id="ex" class="stack">${examState.map((q,i)=>`<fieldset class="q"><legend>${i+1}. ${esc(q.q)}</legend>${q.o.map((o,j)=>`<label class="opt"><input type="radio" name="e${i}" value="${j}"><span>${esc(o)}</span></label>`).join('')}<div class="why" id="ew${i}" hidden></div></fieldset>`).join('')}
+    <div id="eres" role="status" aria-live="polite"></div><div class="row"><button class="primary" type="submit">Submit exam</button></div></form></div>`;
+  $('#ex').onsubmit = ev => {
+    ev.preventDefault();
+    const unanswered = examState.filter((_,i)=>!document.querySelector(`input[name=e${i}]:checked`)).length;
+    if (unanswered){ $('#eres').innerHTML=`<div class="msg bad">${unanswered} question${unanswered>1?'s are':' is'} unanswered. Answer all questions before submitting.</div>`; return; }
+    let score=0;
+    examState.forEach((q,i)=>{
+      const sel=document.querySelector(`input[name=e${i}]:checked`); const opts=[...document.querySelectorAll(`input[name=e${i}]`)].map(x=>x.closest('.opt'));
+      opts.forEach((o,j)=>{ if (j===q.a) o.classList.add('right'); else if (+sel.value===j) o.classList.add('wrong'); });
+      const right = +sel.value===q.a; if (right) score++;
+      const w=$('#ew'+i); w.hidden=false; w.textContent=(right?'Correct. ':'Not quite. ')+q.why+' (Module '+q.mod+')';
+      document.querySelectorAll(`input[name=e${i}]`).forEach(x=>x.disabled=true);
+    });
+    const pct = Math.round(score/examState.length*100);
+    const passedNow = pct >= CFG.passPct;
+    const prev = S.exam || { score:0, passed:false };
+    const best = Math.max(pct, prev.score || 0);
+    const passed = passedNow || !!prev.passed;
+    S.exam = { score: best, passed, at: new Date().toISOString() };
+    if (passed && !S.exam.certDate) S.exam.certDate = new Date().toISOString();
+    save();
+    $('#eres').innerHTML = `<div class="msg ${passedNow?'good':'bad'}">You scored ${score}/${examState.length} (${pct}%). ${passedNow?'You passed.':'The pass mark is '+CFG.passPct+'%. Review the explanations above and retake the exam.'}</div>
+      <div class="row">${passed?'<a class="btn sun" href="#certificate">Get my certificate</a>':''}<button type="button" id="again">${passed?'Retake exam':'Try again'}</button></div>`;
+    $('#again').onclick = () => { examState=null; viewExam(); };
+    const er = $('#eres'); er.setAttribute('tabindex','-1'); er.focus();
+    document.querySelector('#ex button[type=submit]').disabled = true;
+  };
+}
+
+/* ============================================================
+   Certificate
+   ============================================================ */
+function certSvg(name, dateStr, id, score){
+  const e = esc;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 850" width="1200" height="850" font-family="Georgia, 'Times New Roman', serif">
+  <rect width="1200" height="850" fill="#fffdf5"/>
+  <rect x="30" y="30" width="1140" height="790" fill="none" stroke="#0d6b50" stroke-width="6"/>
+  <rect x="48" y="48" width="1104" height="754" fill="none" stroke="#f0b323" stroke-width="2"/>
+  <rect x="30" y="30" width="1140" height="18" fill="#0d6b50"/><rect x="30" y="48" width="1140" height="8" fill="#f0b323"/><rect x="30" y="56" width="1140" height="8" fill="#b3261e"/>
+  <text x="600" y="150" text-anchor="middle" font-size="26" letter-spacing="6" fill="#0d6b50" font-family="Arial, sans-serif" font-weight="700">${e(CFG.org.toUpperCase())}</text>
+  <text x="600" y="250" text-anchor="middle" font-size="68" fill="#1d2b24" font-weight="700">Certificate of Completion</text>
+  <text x="600" y="320" text-anchor="middle" font-size="26" fill="#53635b" font-style="italic">This certifies that</text>
+  <text x="600" y="410" text-anchor="middle" font-size="62" fill="#0d6b50" font-weight="700">${e(name)}</text>
+  <line x1="260" y1="432" x2="940" y2="432" stroke="#f0b323" stroke-width="3"/>
+  <text x="600" y="490" text-anchor="middle" font-size="26" fill="#1d2b24">has successfully completed all 14 modules and passed the final examination of the</text>
+  <text x="600" y="545" text-anchor="middle" font-size="36" fill="#1d2b24" font-weight="700">${e(CFG.course)}</text>
+  <text x="600" y="590" text-anchor="middle" font-size="26" fill="#1d2b24">Online Course for Ethiopian Primary Schools (Grades 1–8)</text>
+  <text x="600" y="650" text-anchor="middle" font-size="24" fill="#53635b">Final examination score: ${score}%  ·  Practice tasks completed: ${practiceDone()} of ${MODULES.length}</text>
+  <text x="200" y="745" font-size="22" fill="#1d2b24" font-family="Arial, sans-serif">Date: ${e(dateStr)}</text>
+  <text x="1000" y="745" text-anchor="end" font-size="22" fill="#1d2b24" font-family="Arial, sans-serif">Certificate ID: ${e(id)}</text>
+  <text x="600" y="745" text-anchor="middle" font-size="20" fill="#53635b" font-family="Arial, sans-serif">Issued online</text>
+  </svg>`;
+}
+function viewCert(){
+  if (S.exam && S.exam.passed && practiceDone() < CFG.practiceMin) { $('#app').innerHTML = `<div class="hero"><h2>Certificate</h2><p class="lead">You passed the final exam. One more step: complete at least ${CFG.practiceMin} practice tasks. You have completed ${practiceDone()}.</p><div><a class="btn primary" href="#portfolio">Open my portfolio</a></div></div>`; return; }
+  if (!(S.exam && S.exam.passed)) { $('#app').innerHTML = `<div class="hero"><h2>Certificate</h2><p class="lead">Your certificate appears here after you pass the final exam${allDone()?'':' and complete all modules'}.</p><div><a class="btn primary" href="#${allDone()?'exam':'course'}">${allDone()?'Take the final exam':'Back to the course'}</a></div></div>`; return; }
+  const L = S.learner, d = new Date(S.exam.certDate || S.exam.at), ds = d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+  const svg = certSvg(L.name, ds, certId(L.email), S.exam.score);
+  $('#app').innerHTML = `<div class="stack" style="padding-top:24px"><h2>Your certificate</h2>
+    <div class="cert">${svg}</div>
+    <div class="row"><button class="primary" id="dpng">Download PNG</button><button id="dsvg">Download SVG</button></div><div id="dmsg" class="hint" role="status"></div>
+    <p class="hint">Anyone can confirm this certificate by emailing the certificate ID and your registered email to ${esc(CFG.ownerEmail)}.</p></div>`;
+  const fname = 'SLLC-certificate-'+L.name.replace(/[^\w]+/g,'-');
+  $('#dsvg').onclick = () => downloadFile(fname+'.svg', new Blob([svg],{type:'image/svg+xml'}), $('#dmsg'));
+  $('#dpng').onclick = () => {
+    const img = new Image(); img.onload = () => { const c=document.createElement('canvas'); c.width=2400; c.height=1700; const x=c.getContext('2d'); x.drawImage(img,0,0,2400,1700); c.toBlob(b => b ? downloadFile(fname+'.png', b, $('#dmsg')) : ($('#dmsg').textContent='Could not create the PNG. Use SVG instead.'), 'image/png'); };
+    img.onerror = () => $('#dmsg').textContent='Could not create the PNG. Use SVG instead.';
+    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+  };
+}
+
+/* ============================================================
+   Portfolio
+   ============================================================ */
+function portfolioText(){
+  const L = S.learner || {};
+  const out = ['SLLC online course: practice portfolio', 'Learner: '+L.name+' ('+L.email+')', 'Date: '+new Date().toLocaleDateString('en-GB'), 'Modules passed: '+doneCount()+' of '+MODULES.length, 'Practice tasks completed: '+practiceDone()+' of '+MODULES.length, 'Final exam: '+(S.exam ? S.exam.score+'%' : 'not taken'), ''];
+  MODULES.forEach(m => {
+    const p = S.practice[m.id], pr = PRACTICE[m.id];
+    out.push('Module '+m.id+': '+m.title, 'Quiz: '+(S.done[m.id] ? S.done[m.id].score+'/4' : 'not passed yet'), 'Practice task: '+pr.title+' ('+(p && p.done ? 'complete' : 'not complete')+')');
+    if (p && p.t) out.push('Answer: '+p.t);
+    out.push('');
+  });
+  return out.join('\n');
+}
+function viewPortfolio(){
+  const L = S.learner, n = practiceDone(), need = CFG.practiceMin;
+  const rows = MODULES.map(m => {
+    const p = S.practice[m.id] || {c:[],t:''}, pr = PRACTICE[m.id];
+    return `<tr><td>${m.id}</td><td><a href="#module-${m.id}">${esc(pr.title)}</a></td><td>${S.done[m.id] ? S.done[m.id].score+'/4' : '—'}</td><td>${p.done ? '<span class="pill ok">Complete</span>' : `<span class="pill">${(p.c||[]).filter(Boolean).length}/${pr.steps.length} steps</span>`}</td></tr>`;
+  }).join('');
+  $('#app').innerHTML = `<div class="stack" style="padding-top:24px"><div><span class="pill">Practice-based assessment</span></div><h2>My practice portfolio</h2>
+    <p class="lead" style="color:var(--muted)">Each module has a hands-on practice task. Your saved answers collect here. You need at least ${need} completed tasks, and a passed final exam, to earn the certificate.</p>
+    <div class="stat"><div><b>${n}/${MODULES.length}</b>practice tasks complete</div><div><b>${doneCount()}/${MODULES.length}</b>module quizzes passed</div></div>
+    <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="${MODULES.length}" aria-valuenow="${n}"><i style="width:${Math.round(n/MODULES.length*100)}%"></i></div>
+    <div class="tablewrap" tabindex="0"><table><thead><tr><th>#</th><th>Practice task</th><th>Quiz</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table></div>
+    <div class="row"><button class="primary" id="pdl">Download portfolio (.txt)</button><button id="pcp">Copy portfolio</button><button id="pem">Email to the course owner</button></div>
+    <div id="pbox"></div><div id="pdm" class="hint" role="status"></div>
+    <div class="row" style="margin-top:18px"><button type="button" id="preset" style="border-color:var(--bad);color:var(--bad)">Reset all progress on this device</button></div></div>`;
+  const txt = portfolioText();
+  $('#pcp').onclick = e => copy(txt, e.target);
+  $('#pdl').onclick = () => downloadFile('SLLC-portfolio-'+L.name.replace(/[^\w]+/g,'-')+'.txt', new Blob([txt],{type:'text/plain'}), $('#pdm'));
+  $('#pem').onclick = () => {
+    const subject = 'SLLC practice portfolio: '+L.name, short = txt.length > 1500 ? txt.slice(0,1500)+'\n[Text cut here. Use the copied portfolio for everything.]' : txt;
+    $('#pbox').innerHTML = `<div class="row">${mailBtns(CFG.ownerEmail, subject, short)}</div><p class="hint">Opens a message to ${esc(CFG.ownerEmail)}. For the full text, press Copy portfolio and paste it into the message.</p>`;
+  };
+  $('#preset').onclick = () => {
+    if (!confirm('This will delete all your module progress, practice answers and exam results on this device. Your registration will be kept. Continue?')) return;
+    const learner = S.learner;
+    S = { learner, done:{}, exam:null, practice:{} };
+    save(); render();
+  };
+}
+
+/* ============================================================
+   Admin
+   ============================================================ */
+const ADMIN_KEY = 'sllc-admin-log-v1';
+const adminLog = () => { try { return JSON.parse(localStorage.getItem(ADMIN_KEY) || '[]'); } catch(e){ return []; } };
+const adminSave = l => { try { localStorage.setItem(ADMIN_KEY, JSON.stringify(l)); } catch(e){} };
+let instrOk = false;
+function viewInstructor(){
+  if (!instrOk) {
+    $('#app').innerHTML = `<div class="hero"><span class="pill">Admin</span><h2>Approve learners</h2><form id="ik" class="card stack" style="max-width:420px"><div class="field"><label for="ikk">Admin key</label><input id="ikk" type="password" autocomplete="off"></div><div id="ikm" role="alert"></div><button class="primary" type="submit">Open</button></form></div>`;
+    $('#ik').onsubmit = ev => { ev.preventDefault(); if (sha256($('#ikk').value.trim())===CFG.instructorHash){ instrOk=true; viewInstructor(); } else $('#ikm').innerHTML='<div class="msg bad">Wrong key.</div>'; };
+    return;
+  }
+  $('#app').innerHTML = `<div class="hero"><span class="pill">Admin</span><h2>Approve learners by email</h2><p class="lead">Learners send their request to ${esc(CFG.ownerEmail)}. Check they are in the social media group, then approve here. The approval email opens already addressed to the learner, with their personal link inside. You press send.</p></div>
+    <form id="ap" class="card stack" style="max-width:640px">
+      <div class="field"><label for="ap0">Paste the registration message (optional, fills in the fields below)</label><textarea id="ap0" rows="5"></textarea></div>
+      <div class="field"><label for="ae">Learner's email (exactly as in their request)</label><input id="ae" type="email"></div>
+      <div class="field"><label for="an">Learner's name</label><input id="an" type="text"></div>
+      <div class="field"><label for="as">School</label><input id="as" type="text"></div>
+      <div class="field"><label for="ar0">Role</label><input id="ar0" type="text"></div>
+      <div class="field"><label for="abase">Course page URL (used to build approval links)</label><input id="abase" type="url" value="${esc(pageBase())}"></div>
+      <div class="row"><button class="primary" type="submit">Approve and prepare email</button><button type="button" id="al">Show allowlist line</button><button type="button" id="ad">Ask for more information</button></div>
+      <div id="ar" role="status" aria-live="polite"></div>
+    </form>
+    <section class="stack" style="margin-top:28px"><h3>Approved on this device</h3><div id="logbox"></div></section>`;
+  const drawLog = () => {
+    const log = adminLog();
+    $('#logbox').innerHTML = log.length
+      ? `<div class="tablewrap" tabindex="0"><table><thead><tr><th>Name</th><th>Email</th><th>Role / school</th><th>Approved</th><th></th></tr></thead><tbody>${log.map((r,i)=>`<tr><td>${esc(r.name||'')}</td><td>${esc(r.email)}</td><td>${esc([r.role,r.school].filter(Boolean).join(' / '))}</td><td>${esc(new Date(r.at).toLocaleDateString('en-GB'))}</td><td><button type="button" data-re="${i}">Resend</button></td></tr>`).join('')}</tbody></table></div><div class="row"><button type="button" id="lcsv">Copy list as CSV</button></div><p class="hint">This list is stored in this browser only. Keep your own copy.</p>`
+      : '<p class="hint">Nobody approved yet on this device.</p>';
+    document.querySelectorAll('[data-re]').forEach(b => b.onclick = () => { const r = adminLog()[+b.dataset.re]; $('#ae').value=r.email; $('#an').value=r.name||''; $('#as').value=r.school||''; $('#ar0').value=r.role||''; $('#ap').scrollIntoView({behavior:'smooth'}); });
+    const c = $('#lcsv'); if (c) c.onclick = ev => copy('name,email,role,school,approved\n'+adminLog().map(r=>[r.name,r.email,r.role,r.school,r.at].map(x=>'"'+String(x||'').replace(/"/g,'""')+'"').join(',')).join('\n'), ev.target);
+  };
+  drawLog();
+  $('#ap0').oninput = () => {
+    const s = $('#ap0').value, em = s.match(/Email:\s*(\S+@\S+)/i) || s.match(/(\S+@\S+\.\S+)/), nm = s.match(/Name:\s*(.+)/i), sc = s.match(/School:\s*(.+)/i), ro = s.match(/Role:\s*(.+)/i);
+    if (em) $('#ae').value = em[1].replace(/[<>,;]/g,''); if (nm) $('#an').value = nm[1].trim(); if (sc) $('#as').value = sc[1].trim(); if (ro) $('#ar0').value = ro[1].trim();
+  };
+  const read = () => ({e:normEmail($('#ae').value), n:$('#an').value.trim(), sc:$('#as').value.trim(), ro:$('#ar0').value.trim()});
+  const bad = e => !/^\S+@\S+\.\S+$/.test(e);
+  $('#ap').onsubmit = ev => {
+    ev.preventDefault();
+    const {e,n,sc,ro} = read();
+    if (bad(e)) { $('#ar').innerHTML = '<div class="msg bad">Enter a valid email.</div>'; return; }
+    const code = accessCode(e);
+    const base = ($('#abase').value.trim() || pageBase()).replace(/#.*$/,'');
+    const link = base + '#join-' + code.replace('-','');
+    const subject = 'Your SLLC course access: approved';
+    const body = `Hello ${n||''},\n\nYour registration for the ${CFG.course} online course is approved.\n\nYour personal approval link:\n${link}\n\nOpen the link, enter your name and this email address (${e}), and start the course. If the link does not fill in your code, type it yourself: ${code}\n\nHow the course works: study the 14 modules, pass each module check, complete the practice tasks (at least ${CFG.practiceMin} of 14), pass the final exam (${CFG.passPct}%) and download your certificate.\n\nThis link is personal. Please do not share it.\n\n${CFG.org}`;
+    const log = adminLog().filter(r => r.email !== e); log.unshift({name:n, email:e, school:sc, role:ro, at:new Date().toISOString()}); adminSave(log); drawLog();
+    $('#ar').innerHTML = `<div class="msg good">Approved ${esc(n||e)}. Access code: <b>${code}</b></div>
+      <div class="row">${mailBtns(e, subject, body)}<button type="button" id="ca">Copy email text</button></div>
+      <p class="hint">Gmail and the email app open a message addressed to ${esc(e)}. Press send there.</p>
+      <div class="copybox">Subject: ${esc(subject)}\n\n${esc(body)}</div>
+      <p class="hint">Certificate ID for this learner (to verify a certificate): <b>${certId(e)}</b></p>
+      ${CFG.requireAllowlist?`<div class="msg info">This course uses the allowlist. Add the learner to <code>CFG.approved</code> in <code>index.html</code> or their code will not work. Use the “Show allowlist line” button below.</div>`:''}`;
+    $('#ca').onclick = ev2 => copy('Subject: '+subject+'\n\n'+body, ev2.target);
+  };
+  $('#al').onclick = () => {
+    const {e} = read();
+    if (bad(e)) { $('#ar').innerHTML = '<div class="msg bad">Enter a valid email first.</div>'; return; }
+    const line = `  "${approvalHash(e)}",`;
+    $('#ar').innerHTML = `<div class="msg info">Paste this line inside <code>approved: [</code> in <code>index.html</code>, then commit. The learner's code will then work.</div>
+      <div class="copybox" id="alh">${esc(line)}</div>
+      <div class="row"><button type="button" id="alc">Copy line</button></div>`;
+    $('#alc').onclick = ev2 => copy(line, ev2.target);
+  };
+  $('#ad').onclick = () => {
+    const {e,n} = read();
+    if (bad(e)) { $('#ar').innerHTML = '<div class="msg bad">Enter a valid email.</div>'; return; }
+    const subject = 'Your SLLC course registration';
+    const body = `Hello ${n||''},\n\nThank you for your interest in the ${CFG.course} online course. Before I can approve you, please confirm that you have joined ${CFG.social.name} and send me your username there, together with your school and your role.\n\nThank you.\n\n${CFG.org}`;
+    $('#ar').innerHTML = `<div class="row">${mailBtns(e, subject, body)}</div><p class="hint">Opens a message addressed to ${esc(e)} asking for the missing details.</p>`;
+  };
+}
+
+/* ============================================================
+   Boot
+   ============================================================ */
+$('#foot').innerHTML = `<p>${esc(CFG.org)} · ${esc(CFG.course)} online course · Based on the SLLC implementation manual. Progress is saved in this browser only. · <a href="#instructor">Admin</a></p>`;
+window.addEventListener('hashchange', route);
+route();
+</script>
+</body>
+</html>
